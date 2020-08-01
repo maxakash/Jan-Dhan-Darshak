@@ -1,0 +1,58 @@
+<resources>
+    <string name="app_name">Jan Dhan Darshak</string>
+    <string name="style_json">[
+  {
+    "featureType": "poi.business",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "featureType": "poi.park",
+    "elementType": "labels.text",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "featureType": "road.arterial",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "featureType": "road.highway",
+    "elementType": "labels",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "featureType": "road.local",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  }
+]</string>
+  <string name="favouriteLocations">Favourite Locations</string>
+  <string name="feedback">Feedback</string>
+  <string name="missingBank">Missing Bank Suggestion</string>
+  <string name="help">Help</string>
+  <string name="aboutUs">About Us</string>
+  <string name="disclaimer">Disclaimer</string>
+
+
+
+
+
+</resources>

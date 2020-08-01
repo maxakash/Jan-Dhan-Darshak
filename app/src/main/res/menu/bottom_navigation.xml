@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/atms"
+        android:icon="@drawable/atms"
+        android:title="ATM"/>
+
+    <item
+        android:id="@+id/branch"
+        android:icon="@drawable/bank"
+        android:title="Branch"/>
+
+    <item
+        android:id="@+id/postOffice"
+        android:icon="@drawable/postoffice"
+        android:title="Post Office"/>
+
+    <item
+        android:id="@+id/csc"
+        android:icon="@drawable/csc"
+        android:title="CSC"/>
+
+    <item
+        android:id="@+id/bankMitra"
+        android:icon="@drawable/bankmitra"
+        android:title="Bank Mitra"/>
+
+</menu>

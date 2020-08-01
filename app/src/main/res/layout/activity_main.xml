@@ -1,0 +1,307 @@
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:backgroundTint="@android:color/transparent"
+    android:fitsSystemWindows="false">
+
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true">
+
+            <com.google.android.material.appbar.AppBarLayout
+                android:id="@+id/appbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimarytrans"
+                android:fitsSystemWindows="true"
+                android:translationZ="0.1dp"
+                app:elevation="0dp">
+
+                <RelativeLayout
+                    android:id="@+id/searchBar"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:background="@drawable/rounded_corner">
+
+                    <ImageView
+                        android:id="@+id/menu"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerInParent="true"
+                        android:layout_marginStart="15dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:onClick="onClick"
+                        android:src="@drawable/menu" />
+
+                    <EditText
+                        android:id="@+id/searchtext"
+                        android:layout_width="250dp"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerInParent="true"
+                        android:layout_marginStart="60dp"
+                        android:clickable="true"
+                        android:background="@android:color/transparent"
+                        android:focusable="true"
+                        android:onClick="onClick"
+                        android:hint="Search here"
+                        android:textColor="#000"
+                        android:textSize="17sp"
+                        android:textStyle="normal" />
+
+                    <ImageView
+                        android:id="@+id/voice"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerInParent="true"
+                        android:layout_marginEnd="15dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:onClick="onClick"
+                        android:src="@drawable/mic" />
+
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/searchResultbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="43dp"
+                    android:layout_marginEnd="10dp"
+                    android:background="@drawable/rounded_corner"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:id="@+id/searchResultBack"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerInParent="true"
+                        android:layout_marginStart="15dp"
+                        android:onClick="onClick"
+                        android:src="@drawable/backarrow" />
+
+                    <TextView
+                        android:id="@+id/searchResultText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerInParent="true"
+                        android:layout_marginStart="60dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:onClick="onClick"
+                        android:text="ATMs"
+                        android:textColor="#000"
+                        android:textSize="16sp"
+                        android:textStyle="normal" />
+
+                    <ImageView
+                        android:id="@+id/searchResultClose"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerInParent="true"
+                        android:layout_marginEnd="15dp"
+                        android:onClick="onClick"
+                        android:src="@drawable/close"
+                        android:visibility="gone" />
+
+                    <ProgressBar
+                        android:id="@+id/midprogress"
+                        style="?android:attr/progressBarStyle"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerInParent="true"
+                        android:layout_marginEnd="15dp"
+                        android:theme="@style/ProgressBarTheme" />
+
+
+                </RelativeLayout>
+
+                <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fitsSystemWindows="true"
+                    android:visibility="gone" />
+
+
+            </com.google.android.material.appbar.AppBarLayout>
+
+
+            <fragment
+                android:id="@+id/map"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="-35dp"
+                tools:context=".views.MapsFragment" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|end"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="100dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:onClick="onClick"
+                app:tint="#ffffff"
+                fab:srcCompat="@drawable/get_location" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="3dp"
+                android:layout_gravity="bottom"
+                android:layout_marginBottom="55dp"
+                android:background="#f2f2f2" />
+
+            <com.google.android.material.bottomnavigation.BottomNavigationView
+                android:id="@+id/bottomNavigationView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:background="@color/colorPrimary"
+                app:elevation="4dp"
+                app:itemIconTint="@color/bottom_nav_color"
+                app:itemTextAppearanceActive="@style/BottomNavigationView.Active"
+                app:itemTextAppearanceInactive="@style/BottomNavigationView"
+                app:itemTextColor="@color/bottom_nav_color"
+                app:labelVisibilityMode="labeled"
+                app:menu="@menu/bottom_navigation" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/markerdetails"
+                android:layout_width="match_parent"
+                android:layout_height="165dp"
+                android:layout_gravity="center|bottom"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="25dp"
+                android:gravity="center"
+                android:onClick="onClick"
+                android:visibility="gone"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="0dp"
+
+
+                >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/markerinfo"
+                    android:orientation="vertical">
+
+
+                    <TextView
+                        android:id="@+id/markername"
+                        android:layout_width="wrap_content"
+                        android:layout_height="24dp"
+                        android:layout_gravity="start"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginBottom="5dp"
+                        android:text="Canara Bank ATM"
+                        android:textColor="#000"
+                        android:textSize="18sp"
+
+                        />
+
+                    <TextView
+                        android:id="@+id/markertype"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:text="ATM"
+                        android:textColor="#A9A9A9"
+                        android:textSize="16sp"
+
+                        />
+
+                    <TextView
+                        android:id="@+id/markeradd"
+                        android:layout_width="wrap_content"
+                        android:layout_height="24dp"
+                        android:layout_gravity="start"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:text="Unknown"
+                        android:textColor="#A9A9A9"
+                        android:textSize="16sp"
+
+                        />
+
+                    <TextView
+                        android:id="@+id/markeropen"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:text="Open Now"
+                        android:textColor="#000"
+                        android:textSize="18sp"
+
+                        />
+
+                    <Button
+                        android:id="@+id/markerdirections"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="5dp"
+                        android:backgroundTint="#3D7AFC"
+                        android:onClick="onClick"
+                        android:text="Directions"
+                        android:textAllCaps="false"
+                        android:textColor="#ffffff"
+                        android:textSize="15sp" />
+
+
+                </LinearLayout>
+
+
+            </androidx.cardview.widget.CardView>
+
+
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+
+    <com.mikepenz.materialdrawer.widget.MaterialDrawerSliderView
+        android:id="@+id/slider"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:layout_marginTop="34dp"
+        android:fitsSystemWindows="false" />
+</androidx.drawerlayout.widget.DrawerLayout>
