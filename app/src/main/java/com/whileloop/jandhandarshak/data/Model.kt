@@ -6,3 +6,13 @@ data class Model(
     var results: List<Any>? = null,
     var status: String? = null
 )
+
+data class Result(
+    var business_status: String? = null,
+    var geometry: String? = null,
+    var viewport: String? = null,
+    var name: String? = null
+
+
+)
+
