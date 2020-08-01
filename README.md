@@ -2,7 +2,7 @@
 **The Government of India has developed a mobile app called Jan Dhan Darshak app, in order to provide guidance to the common people in locating a financial services such as banks, post office, CSC, etc in the country.**  
   ## Implemented Features ##
    
-  Our aim is to upgrade this app making it more feasible by providing better functionality and user experience. Our solution is based on the various issues encountered by users frequently.      
+  Our aim is to upgrade this app making it more feasible by providing better functionality and user experience. Our solution is based on the various issues encountered by users frequently and some of the additional features which will make it more user friendly.      
   - Mostly people complain about the lagging and loading time that app takes so in order to avoid such issues we have reduced loading and lagging time by using caching    
   - We have improved some of the **existing features** of the app such as we fetches user location using cellular network as well as GPS on lauching the app.       
   - The **Bank Details** such as Branch Name, IFSC and BSR code will be fetched from **Razorpay IFSC toolKit API** in order avoid any complains regarding false detail being provided.   
