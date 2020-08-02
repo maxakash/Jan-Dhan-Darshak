@@ -13,6 +13,7 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.whileloop.jandhandarshak.API.APIService
 import com.whileloop.jandhandarshak.API.ServiceBuilder
 import com.whileloop.jandhandarshak.R
+import com.whileloop.jandhandarshak.utils.infoToast
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -24,6 +25,7 @@ import java.util.*
 class MainActivityViewModel : ViewModel() {
 
     val loading by lazy { MutableLiveData<Boolean>() }
+    val placesList by lazy { MutableLiveData<ArrayList<HashMap<String?, String?>?>>() }
 
     fun getData(
         currentLocation: LatLng,
@@ -37,7 +39,7 @@ class MainActivityViewModel : ViewModel() {
         val call = request.getPlaces(
             latlng = "${currentLocation.latitude},${currentLocation.longitude}",
             nearbyPlace = type,
-            radius = 10000,
+            radius = 8000,
             language = language,
             api = "AIzaSyCUYN_YgHg6FaPWzLgF4Pcr-pBfIwzGcaI"
         )
@@ -72,7 +74,7 @@ class MainActivityViewModel : ViewModel() {
         val call = request.getVoiceSearch(
             latlng = "${currentLocation.latitude},${currentLocation.longitude}",
             nearbyPlace = query,
-            radius = 10000,
+            radius = 8000,
             language = language,
             api = "AIzaSyCUYN_YgHg6FaPWzLgF4Pcr-pBfIwzGcaI"
         )
@@ -120,6 +122,43 @@ class MainActivityViewModel : ViewModel() {
                 if (response != null) {
                     println(response.raw().request().url())
                     showNearbyPlaces(parseJSON(response.body()), context, map)
+                }
+            }
+
+            override fun onFailure(call: Call<String>?, t: Throwable?) {
+                println(t?.message)
+            }
+
+        })
+
+    }
+
+    fun getFilterByOpenNow(
+        currentLocation: LatLng,
+        type: String,
+        context: Context,
+        map: GoogleMap,
+        language: String
+    ) {
+        loading.value = true
+        val request = ServiceBuilder.buildService(APIService::class.java)
+        val call = request.filterByOpenNow(
+            latlng = "${currentLocation.latitude},${currentLocation.longitude}",
+            nearbyPlace = type,
+            language = language,
+            opennow = "true",
+            radius = 8000,
+            api = "AIzaSyCUYN_YgHg6FaPWzLgF4Pcr-pBfIwzGcaI"
+        )
+        call.enqueue(object : Callback<String> {
+
+            override fun onResponse(call: Call<String>?, response: Response<String>?) {
+
+                if (response != null) {
+                    println(response.raw().request().url())
+                    showNearbyPlaces(parseJSON(response.body()), context, map)
+                }else{
+                    context.infoToast("No results found.")
                 }
             }
 
@@ -211,6 +250,8 @@ class MainActivityViewModel : ViewModel() {
     ) {
 
         map.clear()
+
+        placesList.value = nearbyPlacesList
         for (i in nearbyPlacesList.indices) {
             val markerOptions = MarkerOptions()
             val googlePlace =

@@ -42,9 +42,9 @@
             android:layout_marginTop="5dp"
             android:layout_marginEnd="10dp"
             android:ellipsize="end"
-            android:visibility="gone"
+            android:visibility="visible"
             android:maxLines="1"
-            android:text="BANK"
+            android:text=""
             android:textColor="#909293"
             android:textSize="13sp"
             android:textStyle="normal" />

@@ -58,8 +58,8 @@ class PlaceDetailViewModel : ViewModel() {
             val photoMetadata = metada!!.first()
 
             val photoRequest = FetchPhotoRequest.builder(photoMetadata)
-                .setMaxWidth(500) // Optional.
-                .setMaxHeight(300) // Optional.
+                .setMaxWidth(400) // Optional.
+                .setMaxHeight(250) // Optional.
                 .build()
             placesClient.fetchPhoto(photoRequest)
                 .addOnSuccessListener { fetchPhotoResponse: FetchPhotoResponse ->

@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentSender.SendIntentException
 import android.content.pm.PackageManager
+import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
@@ -27,6 +28,8 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationRequest
@@ -47,6 +50,7 @@ import com.mikepenz.materialdrawer.model.interfaces.nameRes
 import com.mikepenz.materialdrawer.model.interfaces.nameText
 import com.mikepenz.materialdrawer.widget.AccountHeaderView
 import com.whileloop.jandhandarshak.R
+import com.whileloop.jandhandarshak.listadapters.ResultListAdapter
 import com.whileloop.jandhandarshak.viewmodels.MainActivityViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
@@ -60,7 +64,14 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var locationListener: LocationListener
     private lateinit var currentLocation: LatLng
     private var markerId: String = ""
-    private lateinit var selectedCategory:String
+    private lateinit var selectedCategory: String
+    private lateinit var resultListAdapter: ResultListAdapter
+    private val placesList = Observer<ArrayList<HashMap<String?, String?>?>> { placesList ->
+
+        println("places list changed")
+        resultListAdapter.updateList(placesList)
+
+    }
     private val loading = Observer<Boolean> { isLoading ->
 
         if (!isLoading) {
@@ -69,6 +80,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         } else {
             searchProgress.visibility = View.VISIBLE
             searchResultClose.visibility = View.GONE
+            showResult.visibility = View.VISIBLE
         }
 
     }
@@ -81,6 +93,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         BottomNavigationView.OnNavigationItemSelectedListener { item ->
             bottomNavigationView.menu.setGroupCheckable(0, true, true)
             selectedMarker = null
+            resetSortingButtons()
             when (item.itemId) {
 
                 R.id.atms -> {
@@ -151,6 +164,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
         viewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
         viewModel.loading.observe(this, loading)
+        viewModel.placesList.observe(this, placesList)
 
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
@@ -182,6 +196,13 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             }
 
         })
+
+        resultListAdapter = ResultListAdapter(arrayListOf(), this)
+        resultList.apply {
+            adapter = resultListAdapter
+            layoutManager = LinearLayoutManager(this@MainActivity, RecyclerView.VERTICAL, false)
+
+        }
 
 
     }
@@ -414,19 +435,70 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
             R.id.markerDetails -> {
                 val detailIntent = Intent(this, PlaceDetails::class.java)
-                detailIntent.putExtra("placeId",markerId)
+                detailIntent.putExtra("placeId", markerId)
                 startActivity(detailIntent)
             }
 
             R.id.distance -> {
-                distance.setTextColor(ContextCompat.getColor(this,R.color.colorAccent))
+                markerDetails.visibility = View.GONE
+                selectedMarker = null
+                distance.setTextColor(checkedStateColor())
+                relevance.setTextColor(uncheckedStateColor())
+                distance.strokeColor = checkedStateColor()
+                relevance.strokeColor = uncheckedStateColor()
+                openNow.strokeColor = uncheckedStateColor()
+                openNow.setTextColor(uncheckedStateColor())
 
-               // distance.strokeColor = R.color.colorAccent
-                viewModel.getFilterByDistance(currentLocation,selectedCategory,this,map,deviceLanguage,"distance")
+                viewModel.getFilterByDistance(
+                    currentLocation,
+                    selectedCategory,
+                    this,
+                    map,
+                    deviceLanguage,
+                    "distance"
+                )
             }
 
             R.id.relevance -> {
-                viewModel.getFilterByDistance(currentLocation,selectedCategory,this,map,deviceLanguage,"distance")
+                markerDetails.visibility = View.GONE
+                selectedMarker = null
+                distance.setTextColor(uncheckedStateColor())
+                relevance.setTextColor(checkedStateColor())
+                distance.strokeColor = uncheckedStateColor()
+                relevance.strokeColor = checkedStateColor()
+                openNow.strokeColor = uncheckedStateColor()
+                openNow.setTextColor(uncheckedStateColor())
+
+                viewModel.getData(currentLocation, "atm", this, map, deviceLanguage)
+
+            }
+
+            R.id.openNow -> {
+                markerDetails.visibility = View.GONE
+                selectedMarker = null
+                distance.setTextColor(uncheckedStateColor())
+                relevance.setTextColor(uncheckedStateColor())
+                distance.strokeColor = uncheckedStateColor()
+                relevance.strokeColor = uncheckedStateColor()
+                openNow.strokeColor = checkedStateColor()
+                openNow.setTextColor(checkedStateColor())
+
+                viewModel.getFilterByOpenNow(currentLocation, "atm", this, map, deviceLanguage)
+            }
+
+            R.id.showResult -> {
+                println("clicked show results")
+                resultList.visibility = View.VISIBLE
+                showMap.visibility = View.VISIBLE
+                showResult.visibility = View.GONE
+               // bottomNavigationView.visibility = View.GONE
+            }
+
+            R.id.showMap -> {
+                resultList.visibility = View.GONE
+                showResult.visibility = View.VISIBLE
+                showMap.visibility = View.GONE
+               // bottomNavigationView.visibility = View.VISIBLE
             }
 
         }
@@ -576,6 +648,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 searchResultbar.visibility = View.VISIBLE
                 fab.visibility = View.GONE
                 selectedMarker = null
+                resetSortingButtons()
                 viewModel.getVoiceData(currentLocation, searchText, this, map, deviceLanguage)
 
             }
@@ -597,6 +670,52 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 createLocationRequest()
             }
         }
+    }
+
+
+    private fun checkedStateColor(
+        enabledColor: Int = Color.parseColor("#03DAC5"), // Capri
+        pressedColor: Int = Color.parseColor("#03DAC5"), // Cyber yellow
+        focusedColor: Int = Color.parseColor("#03DAC5") // Aqua
+    ): ColorStateList {
+        val states = arrayOf(
+            intArrayOf(android.R.attr.state_enabled),
+            intArrayOf(android.R.attr.state_pressed),
+            intArrayOf(android.R.attr.state_focused)
+        )
+        val colors = intArrayOf(
+            enabledColor, // enabled
+            pressedColor, // pressed
+            focusedColor // focused
+        )
+        return ColorStateList(states, colors)
+    }
+
+    private fun uncheckedStateColor(
+        enabledColor: Int = Color.parseColor("#A9A9A9"), // Capri
+        pressedColor: Int = Color.parseColor("#A9A9A9"), // Cyber yellow
+        focusedColor: Int = Color.parseColor("#A9A9A9") // Aqua
+    ): ColorStateList {
+        val states = arrayOf(
+            intArrayOf(android.R.attr.state_enabled),
+            intArrayOf(android.R.attr.state_pressed),
+            intArrayOf(android.R.attr.state_focused)
+        )
+        val colors = intArrayOf(
+            enabledColor, // enabled
+            pressedColor, // pressed
+            focusedColor // focused
+        )
+        return ColorStateList(states, colors)
+    }
+
+    private fun resetSortingButtons() {
+        distance.setTextColor(uncheckedStateColor())
+        relevance.setTextColor(checkedStateColor())
+        distance.strokeColor = uncheckedStateColor()
+        relevance.strokeColor = checkedStateColor()
+        openNow.strokeColor = uncheckedStateColor()
+        openNow.setTextColor(uncheckedStateColor())
     }
 
 
