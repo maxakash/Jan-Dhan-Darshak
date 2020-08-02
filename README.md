@@ -1,8 +1,11 @@
 # Jan_Dhan_Darshak
 **The Government of India has developed a mobile app called Jan Dhan Darshak app, in order to provide guidance to the common people in locating a financial services such as bank, ATM, post office, CSC,bank mitra etc in the country.**  
 ## App Screenshot
-![Jan Dhan Darshak Home UI](https://i.imgur.com/a2nvlBe.jpg)
-![Jan Dhan Darshak filter](https://i.imgur.com/DJr7Ejz.jpg)
+<p float="left">
+  <img src="https://i.imgur.com/a2nvlBe.jpg" width="150" alt="Jan Dhan Darshak Home UI"/>
+  <img src="https://i.imgur.com/DJr7Ejz.jpg" width="150" alt="Jan Dhan Darshak filter" /> 
+</p>
+
 ## Implemented Features
 Our aim is to upgrade this app making it more feasible by providing better functionality and user experience. Our solution is based on the various issues encountered by users frequently and some of the additional features which will make it more user friendly.      
   - Mostly people complain about the lagging and loading time that app takes so in order to avoid such issues we have reduced loading and lagging time by using Google Maps API and Caching.   
