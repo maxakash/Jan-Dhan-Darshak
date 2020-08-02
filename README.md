@@ -17,7 +17,9 @@
 ## Implemented Features
 Our aim is to upgrade this app making it more feasible by providing better functionality and user experience. Our solution is based on the various issues encountered by users frequently and some of the additional features which will make it more user friendly.      
   - Mostly people complain about the lagging and loading time that app takes so in order to avoid such issues we have reduced loading and lagging time by using Google Maps API and Caching.   
-  - We have improved some of the **existing features** of the app such as we fetches user location using cellular network as well as GPS on lauching the app.       - Added feature which shows whether a particular Bank, ATM, Branch, CSC or Post Office is open or closed. It also shows the working hours of the office.
+  - We have improved some of the **existing features** of the app such as we fetches user location using cellular network as well as GPS on lauching the app.
+  
+  - Added feature which shows whether a particular Bank, ATM, Branch, CSC or Post Office is open or closed. It also shows the working hours of the office.
   - The **Bank Details** such as Branch Name, IFSC and BSR code will be fetched from **Razorpay IFSC toolKit API**. 
   - We have introduced some of the additional features which will increase the accessiblity of the app. We have introduced five regional languages **Hindi, English,Bengali,Urdu and Gujarati** in the app so that users can find it more feasible to use.                
   - **Google Voice assistant** Facility is also introduced which supports Voice search functionality in 5 different regional languages i.e., **Hindi, English,Bengali,Urdu and Gujarati**    
