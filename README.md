@@ -24,9 +24,9 @@ Our aim is to upgrade this app making it more feasible by providing better funct
    - **Call Option** feature will help the user to contact Bank Branch,Post offices and CSC to enquire any query.     
    - Improved maps UI by using **Google Maps API** as it customized build with agile experiences that bring the real world to your users with maps and street views.    
 ## Features to be Implemented
-   -Text to speech feature.
-   -Giving options to user whether to use text or audio for results
-   -Implementing Navigation features like Add missing Banks Suggestion and Favouraite Locations and support feature etc
+   - Text to speech feature.
+   - Giving options to user whether to use text or audio for results
+   - Implementing Navigation features like Add missing Banks Suggestion and Favouraite Locations and support feature etc
     
     
     
