@@ -18,7 +18,8 @@ Our aim is to upgrade this app making it more feasible by providing better funct
 ## Features to be Implemented ##
 
     -Text to speech feature.
-    Giving options to user whether to use text or audio for results
+    -Giving options to user whether to use text or audio for results
+    -Implementing Navigation features like Add missing Banks Suggestion and Favouraite Locations and support feature etc
     
     
     
