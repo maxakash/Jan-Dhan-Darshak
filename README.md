@@ -9,6 +9,9 @@
   <img src="https://i.imgur.com/2Yx1N4v.jpg" width="150" alt="Jan Dhan Darshak filter" />
   <img src="https://i.imgur.com/vmm1UEs.jpg" width="150" alt="Jan Dhan Darshak filter" />
   <img src="https://i.imgur.com/6OobMcz.jpg" width="150" alt="Jan Dhan Darshak filter" />
+  <img src="https://i.imgur.com/RdOkg7c.jpg" width="150" alt="Jan Dhan Darshak filter" />
+  <img src="https://i.imgur.com/bCdVKMv.jpg" width="150" alt="Jan Dhan Darshak filter" />
+  <img src="https://i.imgur.com/EVqlQka.jpg" width="150" alt="Jan Dhan Darshak filter" />    
 </p>
 
 ## Implemented Features
