@@ -49,6 +49,7 @@ import com.mikepenz.materialdrawer.widget.AccountHeaderView
 import com.whileloop.jandhandarshak.R
 import com.whileloop.jandhandarshak.viewmodels.MainActivityViewModel
 import kotlinx.android.synthetic.main.activity_main.*
+import java.util.*
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -58,6 +59,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var locationManager: LocationManager
     private lateinit var locationListener: LocationListener
     private lateinit var currentLocation: LatLng
+    private var markerId: String = ""
     private val loading = Observer<Boolean> { isLoading ->
 
         if (!isLoading) {
@@ -71,6 +73,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     }
     private var markerLocation: LatLng? = null
     private var selectedMarker: Marker? = null
+    private lateinit var deviceLanguage: String
 
 
     private val mOnNavigationItemSelectedListener =
@@ -86,7 +89,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                     fab.visibility = View.GONE
                     markerType.text = getString(R.string.atm)
                     searchResultText.text = getString(R.string.atm)
-                    viewModel.getData(currentLocation, "atm", this, map)
+                    viewModel.getData(currentLocation, "atm", this, map, deviceLanguage)
                 }
                 R.id.branch -> {
                     item.isChecked = true
@@ -95,7 +98,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                     fab.visibility = View.GONE
                     markerType.text = getString(R.string.branch)
                     searchResultText.text = getString(R.string.branch)
-                    viewModel.getData(currentLocation, "bank", this, map)
+                    viewModel.getData(currentLocation, "bank", this, map, deviceLanguage)
                 }
 
 
@@ -106,14 +109,23 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                     fab.visibility = View.GONE
                     markerType.text = getString(R.string.postOffice)
                     searchResultText.text = getString(R.string.postOffice)
-                    viewModel.getData(currentLocation, "post_office", this, map)
+                    viewModel.getData(currentLocation, "post_office", this, map, deviceLanguage)
 
                 }
                 R.id.csc -> {
                     item.isChecked = true
                     markerType.text = getString(R.string.csc)
                     searchResultText.text = getString(R.string.csc)
-
+                    fab.visibility = View.GONE
+                    searchBar.visibility = View.GONE
+                    searchResultbar.visibility = View.VISIBLE
+                    viewModel.getVoiceData(
+                        currentLocation,
+                        "Jan Seva Kendra",
+                        this,
+                        map,
+                        deviceLanguage
+                    )
                 }
                 R.id.bankMitra -> {
                     markerType.text = getString(R.string.bankMitra)
@@ -129,6 +141,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        deviceLanguage = Locale.getDefault().language
 
         viewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
         viewModel.loading.observe(this, loading)
@@ -175,7 +189,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             attachToSliderView(slider) // attach to the slider
             addProfiles(
                 ProfileDrawerItem().apply {
-                    nameText = "Jan Dhan Darshak"
+                    nameText = getString(R.string.app_name)
                     iconRes = R.drawable.logo
                     typeface = tf
                     selectionListEnabledForSingleProfile = false
@@ -285,20 +299,22 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             markerDetails.visibility = View.VISIBLE
             markerName.text = m.title
             markerAdd.text = m.snippet
-            if (m.tag == "true") {
-                markerOpen.text = "Open Now"
+
+            val tag = m.tag.toString().split(" ")
+            markerId = tag[1]
+            if (tag[0] == "true") {
+                markerOpen.text = getString(R.string.openNow)
                 markerOpen.setTextColor(Color.GREEN)
             } else {
-                markerOpen.text = "Closed Now"
+                markerOpen.text = getString(R.string.closedNow)
                 markerOpen.setTextColor(Color.RED)
             }
-            println(m.tag)
             val height = 100
             val width = 100
             val selectedIcon =
-                BitmapFactory.decodeResource(this.resources, R.drawable.selectedmarker)
+                BitmapFactory.decodeResource(this.resources, R.drawable.selectedmarker1)
             val unselectedIcon =
-                BitmapFactory.decodeResource(this.resources, R.drawable.marker)
+                BitmapFactory.decodeResource(this.resources, R.drawable.marker1)
             val smallMarker = Bitmap.createScaledBitmap(selectedIcon, width, height, false)
             val smallMarker1 = Bitmap.createScaledBitmap(unselectedIcon, width, height, false)
             m.setIcon(BitmapDescriptorFactory.fromBitmap(smallMarker))
@@ -346,7 +362,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
             R.id.fab -> {
                 map.isMyLocationEnabled = true
-                map.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15f))
+                map.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 14f))
             }
 
             R.id.voiceSearch -> {
@@ -371,7 +387,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                     fab.visibility = View.GONE
                     selectedMarker = null
                     searchResultText.text = searchQuery
-                    viewModel.getVoiceData(currentLocation, searchQuery, this, map)
+                    viewModel.getVoiceData(currentLocation, searchQuery, this, map, deviceLanguage)
                     println(searchQuery)
                 }
             }
@@ -386,6 +402,16 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 }
             }
 
+            R.id.closeCard -> {
+                markerDetails.visibility = View.GONE
+                bottomNavigationView.visibility = View.VISIBLE
+            }
+
+            R.id.markerDetails -> {
+                val detailIntent = Intent(this, PlaceDetails::class.java)
+                detailIntent.putExtra("placeId",markerId)
+                startActivity(detailIntent)
+            }
 
         }
 
@@ -534,13 +560,14 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 searchResultbar.visibility = View.VISIBLE
                 fab.visibility = View.GONE
                 selectedMarker = null
-                viewModel.getVoiceData(currentLocation, searchText, this, map)
+                viewModel.getVoiceData(currentLocation, searchText, this, map, deviceLanguage)
 
             }
 
 
         }
     }
+
 
     override fun onRequestPermissionsResult(
         requestCode: Int,

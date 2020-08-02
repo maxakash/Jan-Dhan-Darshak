@@ -2,44 +2,26 @@ package com.whileloop.jandhandarshak.utils
 
 import android.content.Context
 import android.location.Location
+import android.widget.Toast
 import androidx.core.content.edit
+import es.dmoral.toasty.Toasty
 
-/**
- * Returns the `location` object as a human readable string.
- */
-fun Location?.toText():String {
-    return if (this != null) {
-        "($latitude, $longitude)"
-    } else {
-        "Unknown location"
-    }
+
+fun Context.infoToast(message: CharSequence) {
+
+    Toasty.info(applicationContext, message, Toast.LENGTH_SHORT, true).show()
+
 }
 
-/**
- * Provides access to SharedPreferences for location to Activities and Services.
- */
-internal object SharedPreferenceUtil {
+fun Context.successToast(message: CharSequence) {
 
-    const val KEY_FOREGROUND_ENABLED = "tracking_foreground_location"
+    Toasty.success(applicationContext, message, Toast.LENGTH_SHORT, true).show()
 
-    /**
-     * Returns true if requesting location updates, otherwise returns false.
-     *
-     * @param context The [Context].
-     */
-    fun getLocationTrackingPref(context: Context): Boolean =
-        context.getSharedPreferences(
-            "com.whileloop.jandhandarshak", Context.MODE_PRIVATE)
-            .getBoolean(KEY_FOREGROUND_ENABLED, false)
+}
 
-    /**
-     * Stores the location updates state in SharedPreferences.
-     * @param requestingLocationUpdates The location updates state.
-     */
-    fun saveLocationTrackingPref(context: Context, requestingLocationUpdates: Boolean) =
-        context.getSharedPreferences(
-           "com.whileloop.jandhandarshak",
-            Context.MODE_PRIVATE).edit {
-            putBoolean(KEY_FOREGROUND_ENABLED, requestingLocationUpdates)
-        }
+fun Context.failedToast(message: CharSequence) {
+
+
+    Toasty.error(applicationContext, message, Toast.LENGTH_SHORT, true).show()
+
 }

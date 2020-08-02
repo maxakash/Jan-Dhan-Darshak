@@ -15,5 +15,6 @@
     <string name="searchHere">এখানে অনুসন্ধান করুন</string>
     <string name="openNow">এখন খোল</string>
     <string name="closedNow">এখন বন্ধ</string>
-    <string name="directions">Directions</string>
+    <string name="directions">দাবি পরিত্যাগী</string>
+    <string name="diclaimer">দাবি পরিত্যাগী</string>
 </resources>

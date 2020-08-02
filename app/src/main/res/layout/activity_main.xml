@@ -37,7 +37,7 @@
                     android:layout_marginEnd="10dp"
                     android:background="@drawable/rounded_corner">
 
-                    <ImageView
+                    <ImageButton
                         android:id="@+id/menu"
                         android:layout_width="22dp"
                         android:layout_height="22dp"
@@ -45,6 +45,7 @@
                         android:layout_centerInParent="true"
                         android:layout_marginStart="15dp"
                         android:clickable="true"
+                        android:background="@android:color/transparent"
                         android:focusable="true"
                         android:onClick="onClick"
                         android:src="@drawable/menu" />
@@ -60,12 +61,12 @@
                         android:background="@android:color/transparent"
                         android:focusable="true"
                         android:onClick="onClick"
-                        android:hint="Search here"
+                        android:hint="@string/searchHere"
                         android:textColor="#000"
                         android:textSize="17sp"
                         android:textStyle="normal" />
 
-                    <ImageView
+                    <ImageButton
                         android:id="@+id/voiceSearch"
                         android:layout_width="22dp"
                         android:layout_height="22dp"
@@ -74,16 +75,18 @@
                         android:layout_marginEnd="15dp"
                         android:clickable="true"
                         android:focusable="true"
+                        android:background="#fff"
                         android:onClick="onClick"
                         android:visibility="visible"
                         android:src="@drawable/voice_search" />
-                    <ImageView
+                    <ImageButton
                         android:id="@+id/searchText"
                         android:layout_width="22dp"
                         android:layout_height="22dp"
                         android:layout_alignParentEnd="true"
                         android:layout_centerInParent="true"
                         android:layout_marginEnd="15dp"
+                        android:background="#fff"
                         android:clickable="true"
                         android:focusable="true"
                         android:visibility="gone"
@@ -103,7 +106,7 @@
                     android:background="@drawable/rounded_corner"
                     android:visibility="gone">
 
-                    <ImageView
+                    <ImageButton
                         android:id="@+id/searchResultBack"
                         android:layout_width="22dp"
                         android:layout_height="22dp"
@@ -111,6 +114,7 @@
                         android:layout_centerInParent="true"
                         android:layout_marginStart="15dp"
                         android:onClick="onClick"
+                        android:background="@android:color/transparent"
                         android:clickable="true"
                         android:focusable="true"
                         android:src="@drawable/back_arrow" />
@@ -125,12 +129,11 @@
                         android:clickable="true"
                         android:focusable="true"
                         android:onClick="onClick"
-                        android:text="ATMs"
                         android:textColor="#000"
                         android:textSize="16sp"
                         android:textStyle="normal" />
 
-                    <ImageView
+                    <ImageButton
                         android:id="@+id/searchResultClose"
                         android:layout_width="22dp"
                         android:layout_height="22dp"
@@ -138,7 +141,8 @@
                         android:layout_centerInParent="true"
                         android:layout_marginEnd="15dp"
                         android:onClick="onClick"
-                        android:src="@drawable/close"
+                        android:background="@android:color/transparent"
+                        android:src="@drawable/close_card"
                         android:clickable="true"
                         android:focusable="true"
                         android:visibility="gone" />
@@ -148,6 +152,7 @@
                         style="?android:attr/progressBarStyle"
                         android:layout_width="25dp"
                         android:layout_height="25dp"
+                        android:background="@android:color/transparent"
                         android:layout_alignParentEnd="true"
                         android:layout_centerInParent="true"
                         android:layout_marginEnd="15dp"
@@ -222,7 +227,7 @@
                 android:gravity="center"
                 android:onClick="onClick"
                 android:visibility="gone"
-                app:cardCornerRadius="5dp"
+                app:cardCornerRadius="8dp"
                 app:cardElevation="4dp"
                 >
 
@@ -256,11 +261,12 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"/>
 
-                        <ImageView
+                        <ImageButton
                             android:id="@+id/closeCard"
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
-                            android:src="@drawable/close"
+                            android:onClick="onClick"
+                            android:layout_width="22dp"
+                            android:layout_height="22dp"                            android:background="@android:color/transparent"
+                            android:src="@drawable/close_card"
                            />
 
                     </LinearLayout>

@@ -29,7 +29,8 @@ class MainActivityViewModel : ViewModel() {
         currentLocation: LatLng,
         type: String,
         context: Context,
-        map: GoogleMap
+        map: GoogleMap,
+        language: String
     ) {
         loading.value = true
         val request = ServiceBuilder.buildService(APIService::class.java)
@@ -37,6 +38,7 @@ class MainActivityViewModel : ViewModel() {
             latlng = "${currentLocation.latitude},${currentLocation.longitude}",
             nearbyPlace = type,
             radius = 10000,
+            language = language,
             api = "AIzaSyCUYN_YgHg6FaPWzLgF4Pcr-pBfIwzGcaI"
         )
         call.enqueue(object : Callback<String> {
@@ -62,7 +64,8 @@ class MainActivityViewModel : ViewModel() {
         currentLocation: LatLng,
         query: String,
         context: Context,
-        map: GoogleMap
+        map: GoogleMap,
+        language: String
     ) {
         loading.value = true
         val request = ServiceBuilder.buildService(APIService::class.java)
@@ -70,6 +73,7 @@ class MainActivityViewModel : ViewModel() {
             latlng = "${currentLocation.latitude},${currentLocation.longitude}",
             nearbyPlace = query,
             radius = 10000,
+            language = language,
             api = "AIzaSyCUYN_YgHg6FaPWzLgF4Pcr-pBfIwzGcaI"
         )
         call.enqueue(object : Callback<String> {
@@ -151,12 +155,12 @@ class MainActivityViewModel : ViewModel() {
             longitude = googlePlaceJson.getJSONObject("geometry").getJSONObject("location")
                 .getString("lng")
 
-            reference = googlePlaceJson.getString("reference")
+            reference = googlePlaceJson.getString("place_id")
             googlePlaceMap["place_name"] = placeName
             googlePlaceMap["vicinity"] = vicinity
             googlePlaceMap["lat"] = latitude
             googlePlaceMap["lng"] = longitude
-            googlePlaceMap["reference"] = reference
+            googlePlaceMap["place_id"] = reference
 
         } catch (e: JSONException) {
             e.printStackTrace()
@@ -180,6 +184,7 @@ class MainActivityViewModel : ViewModel() {
             val lng = googlePlace["lng"]!!.toDouble()
             val placeName = googlePlace["place_name"]
             val latLng = LatLng(lat, lng)
+            val placeId = googlePlace["place_id"]
 
             markerOptions.position(latLng)
             markerOptions.title(placeName)
@@ -188,15 +193,14 @@ class MainActivityViewModel : ViewModel() {
             val height = 100
             val width = 100
             val bitmap =
-                BitmapFactory.decodeResource(context.resources, R.drawable.marker)
+                BitmapFactory.decodeResource(context.resources, R.drawable.marker1)
             val smallMarker = Bitmap.createScaledBitmap(bitmap, width, height, false)
             markerOptions.icon(BitmapDescriptorFactory.fromBitmap(smallMarker))
             val marker = map.addMarker(markerOptions)
 
 
-
             if (!googlePlace["isOpen"].isNullOrEmpty()) {
-                marker.tag = googlePlace["isOpen"]
+                marker.tag = googlePlace["isOpen"] + " " + placeId
             }
 
 

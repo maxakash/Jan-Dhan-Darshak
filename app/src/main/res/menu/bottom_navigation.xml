@@ -3,26 +3,26 @@
     <item
         android:id="@+id/atms"
         android:icon="@drawable/atms"
-        android:title="ATM"/>
+        android:title="@string/atm"/>
 
     <item
         android:id="@+id/branch"
         android:icon="@drawable/bank"
-        android:title="Branch"/>
+        android:title="@string/branch"/>
 
     <item
         android:id="@+id/postOffice"
         android:icon="@drawable/postoffice"
-        android:title="Post Office"/>
+        android:title="@string/postOffice"/>
 
     <item
         android:id="@+id/csc"
         android:icon="@drawable/csc"
-        android:title="CSC"/>
+        android:title="@string/csc"/>
 
     <item
         android:id="@+id/bankMitra"
         android:icon="@drawable/bankmitra"
-        android:title="Bank Mitra"/>
+        android:title="@string/bankMitra"/>
 
 </menu>
