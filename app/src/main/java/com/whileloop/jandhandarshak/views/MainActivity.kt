@@ -84,8 +84,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                     searchBar.visibility = View.GONE
                     searchResultbar.visibility = View.VISIBLE
                     fab.visibility = View.GONE
-                    markerType.text = "ATM"
-                    searchResultText.text = "ATMs"
+                    markerType.text = getString(R.string.atm)
+                    searchResultText.text = getString(R.string.atm)
                     viewModel.getData(currentLocation, "atm", this, map)
                 }
                 R.id.branch -> {
@@ -93,8 +93,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                     searchBar.visibility = View.GONE
                     searchResultbar.visibility = View.VISIBLE
                     fab.visibility = View.GONE
-                    markerType.text = "Branch"
-                    searchResultText.text = "Branch"
+                    markerType.text = getString(R.string.branch)
+                    searchResultText.text = getString(R.string.branch)
                     viewModel.getData(currentLocation, "bank", this, map)
                 }
 
@@ -104,16 +104,20 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                     searchBar.visibility = View.GONE
                     searchResultbar.visibility = View.VISIBLE
                     fab.visibility = View.GONE
-                    markerType.text = "Post Office"
-                    searchResultText.text = "Post Office"
+                    markerType.text = getString(R.string.postOffice)
+                    searchResultText.text = getString(R.string.postOffice)
                     viewModel.getData(currentLocation, "post_office", this, map)
 
                 }
                 R.id.csc -> {
                     item.isChecked = true
+                    markerType.text = getString(R.string.csc)
+                    searchResultText.text = getString(R.string.csc)
 
                 }
                 R.id.bankMitra -> {
+                    markerType.text = getString(R.string.bankMitra)
+                    searchResultText.text = getString(R.string.bankMitra)
                     item.isChecked = true
 
                 }
@@ -366,6 +370,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                     searchResultbar.visibility = View.VISIBLE
                     fab.visibility = View.GONE
                     selectedMarker = null
+                    searchResultText.text = searchQuery
                     viewModel.getVoiceData(currentLocation, searchQuery, this, map)
                     println(searchQuery)
                 }

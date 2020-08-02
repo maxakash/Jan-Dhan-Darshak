@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">જન ધન દર્શન</string>
+    <string name="directions">દિશાઓ</string>
+    <string name="closedNow">હવે બંધ</string>
+    <string name="openNow">કાર્ય-સમય</string>
+    <string name="searchHere">અહીં શોધો</string>
+    <string name="bankMitra">બેંક મિત્રા</string>
+    <string name="csc">સી.એસ.સી.</string>
+    <string name="postOffice">ડાકઘર</string>
+    <string name="branch">શાખા</string>
+    <string name="atm">એટીએમ</string>
+    <string name="disclaimer">અસ્વીકરણ</string>
+    <string name="aboutUs">અમારા વિશે</string>
+    <string name="help">સહાય કરો</string>
+    <string name="missingBank">ગુમ બેંક સૂચન</string>
+    <string name="feedback">પ્રતિસાદ</string>
+    <string name="favouriteLocations">પ્રિય સ્થાનો</string>
+</resources>

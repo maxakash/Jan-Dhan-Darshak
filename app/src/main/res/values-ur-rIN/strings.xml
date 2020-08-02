@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">جان دولت</string>
+    <string name="favouriteLocations">پسندیدہ مقامات</string>
+    <string name="feedback">تجویز</string>
+    <string name="missingBank">غائب بینک تجویز</string>
+    <string name="help">مدد</string>
+    <string name="aboutUs">ہمارے بارے میں</string>
+    <string name="disclaimer">Disclaimer</string>
+    <string name="branch">شاخ</string>
+    <string name="atm">اے ٹی ایم</string>
+    <string name="postOffice">ڈاک خانہ</string>
+    <string name="csc">CSC</string>
+    <string name="bankMitra">بینک میترا</string>
+    <string name="searchHere">یہاں تلاش کریں</string>
+    <string name="openNow">ابھی کھولیں</string>
+    <string name="closedNow">اب بند ہے</string>
+    <string name="directions">ہدایات</string>
+</resources>

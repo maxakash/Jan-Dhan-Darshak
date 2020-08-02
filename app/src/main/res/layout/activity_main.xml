@@ -317,7 +317,7 @@
                         android:backgroundTint="#3D7AFC"
                         android:onClick="onClick"
                         app:icon="@drawable/directions"
-                        android:text="Directions"
+                        android:text="@string/directions"
                         app:cornerRadius="20dp"
                         android:textAllCaps="false"
                         android:textColor="#ffffff"

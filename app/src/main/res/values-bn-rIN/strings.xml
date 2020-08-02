@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">জেন ধন দর্শন</string>
+    <string name="favouriteLocations">প্রিয় অবস্থান</string>
+    <string name="feedback">অনুপস্থিত ব্যাঙ্কের পরামর্শ</string>
+    <string name="missingBank">অনুপস্থিত ব্যাঙ্কের পরামর্শ</string>
+    <string name="help">সাহায্য</string>
+    <string name="aboutUs">আমাদের সম্পর্কে</string>
+    <string name="disclaimer">Disclaimer</string>
+    <string name="atm">এটিএম</string>
+    <string name="branch">শাখা</string>
+    <string name="postOffice">ডাক ঘর</string>
+    <string name="csc">CSC এন্ড</string>
+    <string name="bankMitra">ব্যাংক মিত্র</string>
+    <string name="searchHere">এখানে অনুসন্ধান করুন</string>
+    <string name="openNow">এখন খোল</string>
+    <string name="closedNow">এখন বন্ধ</string>
+    <string name="directions">Directions</string>
+</resources>

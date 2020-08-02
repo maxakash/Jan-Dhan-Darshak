@@ -50,6 +50,18 @@
   <string name="help">Help</string>
   <string name="aboutUs">About Us</string>
   <string name="disclaimer">Disclaimer</string>
+  <string name="atm">ATM</string>
+  <string name="branch">Branch</string>
+  <string name="postOffice">Post Office</string>
+  <string name="csc">CSC</string>
+  <string name="bankMitra">Bank Mitra</string>
+  <string name="searchHere">Search Here</string>
+  <string name="openNow">Open Now</string>
+  <string name="closedNow">Closed Now</string>
+  <string name="directions">Directions</string>
+
+
+
 
 
 

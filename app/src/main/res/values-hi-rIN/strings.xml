@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">जन धन दर्शन</string>
+    <string name="favouriteLocations">पसंदीदा स्थान</string>
+    <string name="feedback">सुझाव</string>
+    <string name="missingBank">मिसिंग बैंक सुझाव</string>
+    <string name="help">मदद</string>
+    <string name="aboutUs">हमारे बारे में</string>
+    <string name="disclaimer">Disclaimer</string>
+    <string name="atm">एटीएम</string>
+    <string name="branch">बैंक शाखा</string>
+    <string name="postOffice">डाक घर</string>
+    <string name="csc">सीएससी</string>
+    <string name="bankMitra">बैंक मित्र</string>
+    <string name="searchHere">यहाँ ढूँढे</string>
+    <string name="directions">दिशा-निर्देश</string>
+    <string name="openNow">कार्य-समय</string>
+    <string name="closedNow">बन्द है</string>
+</resources>
