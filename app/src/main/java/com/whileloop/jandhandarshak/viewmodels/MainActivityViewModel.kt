@@ -27,6 +27,8 @@ class MainActivityViewModel : ViewModel() {
     val loading by lazy { MutableLiveData<Boolean>() }
     val placesList by lazy { MutableLiveData<ArrayList<HashMap<String?, String?>?>>() }
 
+
+    //this gets nearby locations on the basis of relevance
     fun getData(
         currentLocation: LatLng,
         type: String,
@@ -61,7 +63,7 @@ class MainActivityViewModel : ViewModel() {
 
     }
 
-
+    //this gets nearby locations on voice search
     fun getVoiceData(
         currentLocation: LatLng,
         query: String,
@@ -98,6 +100,8 @@ class MainActivityViewModel : ViewModel() {
 
     }
 
+
+    //this filters locations on the basis of location
     fun getFilterByDistance(
         currentLocation: LatLng,
         type: String,
@@ -133,6 +137,8 @@ class MainActivityViewModel : ViewModel() {
 
     }
 
+
+    //this filters text search results on the basis of location
     fun getFilterByDistanceKeyword(
         currentLocation: LatLng,
         query: String,
@@ -168,6 +174,7 @@ class MainActivityViewModel : ViewModel() {
 
     }
 
+    //this filters results on the basis of working hours
     fun getFilterByOpenNow(
         currentLocation: LatLng,
         type: String,
@@ -192,7 +199,7 @@ class MainActivityViewModel : ViewModel() {
                 if (response != null) {
                     println(response.raw().request().url())
                     showNearbyPlaces(parseJSON(response.body()), context, map)
-                }else{
+                } else {
                     context.infoToast("No results found.")
                 }
             }
@@ -205,12 +212,14 @@ class MainActivityViewModel : ViewModel() {
 
     }
 
+
+    //this filters text or voice search results on the basis of working hours
     fun getFilterByOpenNowKeyword(
         currentLocation: LatLng,
         context: Context,
         map: GoogleMap,
         language: String,
-        query:String
+        query: String
     ) {
         loading.value = true
         val request = ServiceBuilder.buildService(APIService::class.java)
@@ -229,7 +238,7 @@ class MainActivityViewModel : ViewModel() {
                 if (response != null) {
                     println(response.raw().request().url())
                     showNearbyPlaces(parseJSON(response.body()), context, map)
-                }else{
+                } else {
                     context.infoToast("No results found.")
                 }
             }
@@ -243,6 +252,7 @@ class MainActivityViewModel : ViewModel() {
     }
 
 
+    // this parse the JSON data from api into readable format
     fun parseJSON(jsonData: String?): ArrayList<HashMap<String?, String?>?> {
         var jsonArray: JSONArray? = null
         val jsonObject: JSONObject
@@ -255,6 +265,7 @@ class MainActivityViewModel : ViewModel() {
         return getPlaces(jsonArray)
     }
 
+    //this gets places from parsed JSON data
     private fun getPlaces(jsonArray: JSONArray?): ArrayList<HashMap<String?, String?>?> {
         val placesCount = jsonArray?.length()
         val placesList: ArrayList<HashMap<String?, String?>?> =
@@ -273,6 +284,7 @@ class MainActivityViewModel : ViewModel() {
         return placesList
     }
 
+    //this gets individual place details from places data
     private fun getPlace(googlePlaceJson: JSONObject): HashMap<String?, String?>? {
 
         val googlePlaceMap =
@@ -293,7 +305,7 @@ class MainActivityViewModel : ViewModel() {
             if (!googlePlaceJson.isNull("opening_hours")) {
                 isOpen = googlePlaceJson.getJSONObject("opening_hours").getString("open_now")
                 googlePlaceMap["isOpen"] = isOpen
-            }else{
+            } else {
                 googlePlaceMap["isOpen"] = "unknown"
             }
             latitude = googlePlaceJson.getJSONObject("geometry").getJSONObject("location")
@@ -314,7 +326,7 @@ class MainActivityViewModel : ViewModel() {
         return googlePlaceMap
     }
 
-
+    //this marks the search results as markers on the map
     private fun showNearbyPlaces(
         nearbyPlacesList: ArrayList<HashMap<String?, String?>?>,
         context: Context,

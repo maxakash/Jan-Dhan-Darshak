@@ -92,7 +92,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private var selectedMarker: Marker? = null
     private lateinit var deviceLanguage: String
 
-
+    // responsible for handling clicking of bottom navigation bar
     private val mOnNavigationItemSelectedListener =
         BottomNavigationView.OnNavigationItemSelectedListener { item ->
             bottomNavigationView.menu.setGroupCheckable(0, true, true)
@@ -211,7 +211,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     }
 
-
+    // sets the side navigation drawer
     private fun setDrawer() {
         val tf = Typeface.createFromAsset(this.assets, "monst.ttf")
 
@@ -282,7 +282,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     }
 
-
+    //handles gps location
     private fun locationListener() {
         locationManager =
             getSystemService(Context.LOCATION_SERVICE) as LocationManager
@@ -312,7 +312,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
-
+    //initialize the map and marks the current location of user
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
         map.mapType = 1
@@ -361,7 +361,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     }
 
-
+    //handles all user click events
     @SuppressLint("MissingPermission")
     fun onClick(view: View) {
 
@@ -564,6 +564,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     }
 
+    //creates location request to get user location from GPS
     private fun createLocationRequest() {
 
         if (!setMyLastLocation()) {
@@ -646,6 +647,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         return locationKnown
     }
 
+    //request location permission from user
     private fun getLocation() {
         if (ContextCompat.checkSelfPermission(
                 applicationContext,
@@ -663,6 +665,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
+    //handles voice search
     private fun startVoiceRecognitionActivity() {
         val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
         intent.putExtra(

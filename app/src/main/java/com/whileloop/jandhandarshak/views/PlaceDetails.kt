@@ -36,6 +36,7 @@ class PlaceDetails : AppCompatActivity() {
 
         viewModel.getPlaceDetails(placeId, placesClient, placePhoto)
 
+        //this sets all the values related to a location such as name,address,photo
         viewModel.placeDetail.observe(this, Observer { placeDetail ->
 
             placeDetails = placeDetail
@@ -72,7 +73,7 @@ class PlaceDetails : AppCompatActivity() {
         })
     }
 
-
+//handles user click events
     @SuppressLint("MissingPermission")
     fun onClick(view: View) {
 

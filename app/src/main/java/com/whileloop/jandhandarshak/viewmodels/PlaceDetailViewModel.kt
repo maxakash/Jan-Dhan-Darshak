@@ -11,7 +11,7 @@ class PlaceDetailViewModel : ViewModel() {
 
     val placeDetail by lazy { MutableLiveData<Place>() }
 
-
+    //this gets places details form google maps places api
     fun getPlaceDetails(placeId: String, placesClient: PlacesClient, placeImage: ImageView) {
 
         val placeFields = listOf(
@@ -33,7 +33,7 @@ class PlaceDetailViewModel : ViewModel() {
 
                 placeDetail.value = place
 
-                getPhoto(place,placesClient,placeImage)
+                getPhoto(place, placesClient, placeImage)
 
                 println(place)
 
@@ -49,12 +49,13 @@ class PlaceDetailViewModel : ViewModel() {
             }
     }
 
-    fun getPhoto(place: Place, placesClient: PlacesClient,placeImage:ImageView) {
+    //this gets photo for a place
+    private fun getPhoto(place: Place, placesClient: PlacesClient, placeImage: ImageView) {
         val metada = place.photoMetadatas
         if (metada == null || metada.isEmpty()) {
             println("no photo")
 
-        }else {
+        } else {
             val photoMetadata = metada!!.first()
 
             val photoRequest = FetchPhotoRequest.builder(photoMetadata)
