@@ -259,6 +259,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|end"
                 android:layout_marginEnd="20dp"
+                android:backgroundTint="@color/colorAccent"
                 android:layout_marginBottom="100dp"
                 android:clickable="true"
                 android:focusable="true"
@@ -276,11 +277,11 @@
                 android:onClick="onClick"
                 android:text="View List"
                 android:textAllCaps="false"
-                android:textColor="#3D7AFC"
+                android:textColor="@color/colorAccent"
                 android:visibility="gone"
                 app:cornerRadius="20dp"
                 app:icon="@drawable/result_list"
-                app:iconTint="#3D7AFC" />
+                app:iconTint="@color/colorAccent" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/showMap"
@@ -292,11 +293,11 @@
                 android:onClick="onClick"
                 android:text="View Map"
                 android:textAllCaps="false"
-                android:textColor="#3D7AFC"
+                android:textColor="@color/colorAccent"
                 android:visibility="gone"
                 app:cornerRadius="20dp"
                 app:icon="@drawable/result_map"
-                app:iconTint="#3D7AFC" />
+                app:iconTint="@color/colorAccent" />
 
             <View
                 android:layout_width="match_parent"
@@ -349,7 +350,7 @@
 
                         <TextView
                             android:id="@+id/markerName"
-                            android:layout_width="wrap_content"
+                            android:layout_width="250dp"
                             android:layout_height="24dp"
                             android:layout_gravity="start"
                             android:layout_marginStart="10dp"
@@ -425,7 +426,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
                         android:layout_marginTop="5dp"
-                        android:backgroundTint="#3D7AFC"
+                        android:backgroundTint="@color/colorAccent"
                         android:onClick="onClick"
                         android:text="@string/directions"
                         android:textAllCaps="false"

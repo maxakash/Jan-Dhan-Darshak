@@ -39,7 +39,7 @@ class MainActivityViewModel : ViewModel() {
         val call = request.getPlaces(
             latlng = "${currentLocation.latitude},${currentLocation.longitude}",
             nearbyPlace = type,
-            radius = 8000,
+            radius = 9000,
             language = language,
             api = "AIzaSyCUYN_YgHg6FaPWzLgF4Pcr-pBfIwzGcaI"
         )
@@ -74,7 +74,7 @@ class MainActivityViewModel : ViewModel() {
         val call = request.getVoiceSearch(
             latlng = "${currentLocation.latitude},${currentLocation.longitude}",
             nearbyPlace = query,
-            radius = 8000,
+            radius = 9000,
             language = language,
             api = "AIzaSyCUYN_YgHg6FaPWzLgF4Pcr-pBfIwzGcaI"
         )
@@ -133,6 +133,41 @@ class MainActivityViewModel : ViewModel() {
 
     }
 
+    fun getFilterByDistanceKeyword(
+        currentLocation: LatLng,
+        query: String,
+        context: Context,
+        map: GoogleMap,
+        language: String,
+        rankBy: String
+    ) {
+        loading.value = true
+        val request = ServiceBuilder.buildService(APIService::class.java)
+        val call = request.filterByDistanceKeyword(
+            latlng = "${currentLocation.latitude},${currentLocation.longitude}",
+            query = query,
+            language = language,
+            rankyby = rankBy,
+            api = "AIzaSyCUYN_YgHg6FaPWzLgF4Pcr-pBfIwzGcaI"
+        )
+        call.enqueue(object : Callback<String> {
+
+            override fun onResponse(call: Call<String>?, response: Response<String>?) {
+
+                if (response != null) {
+                    println(response.raw().request().url())
+                    showNearbyPlaces(parseJSON(response.body()), context, map)
+                }
+            }
+
+            override fun onFailure(call: Call<String>?, t: Throwable?) {
+                println(t?.message)
+            }
+
+        })
+
+    }
+
     fun getFilterByOpenNow(
         currentLocation: LatLng,
         type: String,
@@ -148,6 +183,43 @@ class MainActivityViewModel : ViewModel() {
             language = language,
             opennow = "true",
             radius = 8000,
+            api = "AIzaSyCUYN_YgHg6FaPWzLgF4Pcr-pBfIwzGcaI"
+        )
+        call.enqueue(object : Callback<String> {
+
+            override fun onResponse(call: Call<String>?, response: Response<String>?) {
+
+                if (response != null) {
+                    println(response.raw().request().url())
+                    showNearbyPlaces(parseJSON(response.body()), context, map)
+                }else{
+                    context.infoToast("No results found.")
+                }
+            }
+
+            override fun onFailure(call: Call<String>?, t: Throwable?) {
+                println(t?.message)
+            }
+
+        })
+
+    }
+
+    fun getFilterByOpenNowKeyword(
+        currentLocation: LatLng,
+        context: Context,
+        map: GoogleMap,
+        language: String,
+        query:String
+    ) {
+        loading.value = true
+        val request = ServiceBuilder.buildService(APIService::class.java)
+        val call = request.filterByOpenNowKeyword(
+            latlng = "${currentLocation.latitude},${currentLocation.longitude}",
+            language = language,
+            opennow = "true",
+            radius = 8000,
+            query = query,
             api = "AIzaSyCUYN_YgHg6FaPWzLgF4Pcr-pBfIwzGcaI"
         )
         call.enqueue(object : Callback<String> {
@@ -269,7 +341,7 @@ class MainActivityViewModel : ViewModel() {
             val height = 100
             val width = 100
             val bitmap =
-                BitmapFactory.decodeResource(context.resources, R.drawable.marker1)
+                BitmapFactory.decodeResource(context.resources, R.drawable.marker2)
             val smallMarker = Bitmap.createScaledBitmap(bitmap, width, height, false)
             markerOptions.icon(BitmapDescriptorFactory.fromBitmap(smallMarker))
             val marker = map.addMarker(markerOptions)
@@ -291,6 +363,8 @@ class MainActivityViewModel : ViewModel() {
             map.animateCamera(CameraUpdateFactory.zoomTo(11f))
             loading.value = false
         } catch (e: Exception) {
+            loading.value = false
+            context.infoToast("No results found.")
             e.printStackTrace()
         }
     }

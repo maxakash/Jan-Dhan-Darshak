@@ -48,6 +48,8 @@ import com.mikepenz.materialdrawer.model.ProfileDrawerItem
 import com.mikepenz.materialdrawer.model.interfaces.iconRes
 import com.mikepenz.materialdrawer.model.interfaces.nameRes
 import com.mikepenz.materialdrawer.model.interfaces.nameText
+import com.mikepenz.materialdrawer.model.interfaces.withName
+import com.mikepenz.materialdrawer.util.addStickyFooterItem
 import com.mikepenz.materialdrawer.widget.AccountHeaderView
 import com.whileloop.jandhandarshak.R
 import com.whileloop.jandhandarshak.listadapters.ResultListAdapter
@@ -68,7 +70,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var resultListAdapter: ResultListAdapter
     private val placesList = Observer<ArrayList<HashMap<String?, String?>?>> { placesList ->
 
-        println("places list changed")
+        if (placesList.isEmpty())
+            showResult.visibility = View.GONE
+
         resultListAdapter.updateList(placesList)
 
     }
@@ -219,10 +223,12 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                     iconRes = R.drawable.logo
                     typeface = tf
                     selectionListEnabledForSingleProfile = false
+                    setBackgroundResource(R.drawable.background1)
                 }
             )
 
         }
+
         val item1 = PrimaryDrawerItem().apply {
             identifier = 1
             nameRes = R.string.favouriteLocations
@@ -272,6 +278,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
             }
         }
+        slider.addStickyFooterItem(PrimaryDrawerItem().withName("Department of Financial Service"))
+
     }
 
 
@@ -293,7 +301,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                     .target(currentLocation)
                     .zoom(14f)
                     .build()
-                map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
+                map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
                 map.isMyLocationEnabled = true
 
             }
@@ -340,7 +348,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             val selectedIcon =
                 BitmapFactory.decodeResource(this.resources, R.drawable.selectedmarker1)
             val unselectedIcon =
-                BitmapFactory.decodeResource(this.resources, R.drawable.marker1)
+                BitmapFactory.decodeResource(this.resources, R.drawable.marker2)
             val smallMarker = Bitmap.createScaledBitmap(selectedIcon, width, height, false)
             val smallMarker1 = Bitmap.createScaledBitmap(unselectedIcon, width, height, false)
             m.setIcon(BitmapDescriptorFactory.fromBitmap(smallMarker))
@@ -370,6 +378,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 map.isMyLocationEnabled = true
                 bottomNavigationView.visibility = View.VISIBLE
                 markerDetails.visibility = View.GONE
+                resultList.visibility = View.GONE
+                showResult.visibility = View.GONE
+                showMap.visibility = View.GONE
                 fab.visibility = View.VISIBLE
                 bottomNavigationView.menu.setGroupCheckable(0, false, true)
 
@@ -382,13 +393,16 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 map.isMyLocationEnabled = true
                 bottomNavigationView.visibility = View.VISIBLE
                 markerDetails.visibility = View.GONE
+                resultList.visibility = View.GONE
+                showResult.visibility = View.GONE
+                showMap.visibility = View.GONE
                 fab.visibility = View.VISIBLE
                 bottomNavigationView.menu.setGroupCheckable(0, false, true)
             }
 
             R.id.fab -> {
                 map.isMyLocationEnabled = true
-                map.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 14f))
+                map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 14f))
             }
 
             R.id.voiceSearch -> {
@@ -431,6 +445,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             R.id.closeCard -> {
                 markerDetails.visibility = View.GONE
                 bottomNavigationView.visibility = View.VISIBLE
+
             }
 
             R.id.markerDetails -> {
@@ -442,6 +457,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             R.id.distance -> {
                 markerDetails.visibility = View.GONE
                 selectedMarker = null
+                bottomNavigationView.visibility = View.VISIBLE
                 distance.setTextColor(checkedStateColor())
                 relevance.setTextColor(uncheckedStateColor())
                 distance.strokeColor = checkedStateColor()
@@ -449,33 +465,54 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 openNow.strokeColor = uncheckedStateColor()
                 openNow.setTextColor(uncheckedStateColor())
 
-                viewModel.getFilterByDistance(
-                    currentLocation,
-                    selectedCategory,
-                    this,
-                    map,
-                    deviceLanguage,
-                    "distance"
-                )
+                if (selectedCategory != "Jan Seva Kendra")
+                    viewModel.getFilterByDistance(
+                        currentLocation,
+                        selectedCategory,
+                        this,
+                        map,
+                        deviceLanguage,
+                        "distance"
+                    )
+                else
+                    viewModel.getFilterByDistanceKeyword(
+                        currentLocation,
+                        "Jan Seva Kendra",
+                        this,
+                        map,
+                        deviceLanguage,
+                        "distance"
+                    )
             }
 
             R.id.relevance -> {
                 markerDetails.visibility = View.GONE
                 selectedMarker = null
+                bottomNavigationView.visibility = View.VISIBLE
                 distance.setTextColor(uncheckedStateColor())
                 relevance.setTextColor(checkedStateColor())
                 distance.strokeColor = uncheckedStateColor()
                 relevance.strokeColor = checkedStateColor()
                 openNow.strokeColor = uncheckedStateColor()
                 openNow.setTextColor(uncheckedStateColor())
+                if (selectedCategory != "Jan Seva Kendra")
+                    viewModel.getData(currentLocation, selectedCategory, this, map, deviceLanguage)
+                else
+                    viewModel.getVoiceData(
+                        currentLocation,
+                        "Jan Seva Kendra",
+                        this,
+                        map,
+                        deviceLanguage
+                    )
 
-                viewModel.getData(currentLocation, "atm", this, map, deviceLanguage)
 
             }
 
             R.id.openNow -> {
                 markerDetails.visibility = View.GONE
                 selectedMarker = null
+                bottomNavigationView.visibility = View.VISIBLE
                 distance.setTextColor(uncheckedStateColor())
                 relevance.setTextColor(uncheckedStateColor())
                 distance.strokeColor = uncheckedStateColor()
@@ -483,22 +520,44 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 openNow.strokeColor = checkedStateColor()
                 openNow.setTextColor(checkedStateColor())
 
-                viewModel.getFilterByOpenNow(currentLocation, "atm", this, map, deviceLanguage)
+                if (selectedCategory != "Jan Seva Kendra")
+                    viewModel.getFilterByOpenNow(
+                        currentLocation,
+                        selectedCategory,
+                        this,
+                        map,
+                        deviceLanguage
+                    )
+                else if (selectedCategory == "Jan Seva Kendra")
+                    viewModel.getFilterByOpenNowKeyword(
+                        currentLocation,
+                        this,
+                        map,
+                        deviceLanguage,
+                        "Jan Seva Kendra"
+                    )
+                else
+                    viewModel.getVoiceData(
+                        currentLocation,
+                        "Jan Seva Kendra",
+                        this,
+                        map,
+                        deviceLanguage
+                    )
             }
 
             R.id.showResult -> {
-                println("clicked show results")
                 resultList.visibility = View.VISIBLE
                 showMap.visibility = View.VISIBLE
                 showResult.visibility = View.GONE
-               // bottomNavigationView.visibility = View.GONE
+                // bottomNavigationView.visibility = View.GONE
             }
 
             R.id.showMap -> {
                 resultList.visibility = View.GONE
                 showResult.visibility = View.VISIBLE
                 showMap.visibility = View.GONE
-               // bottomNavigationView.visibility = View.VISIBLE
+                // bottomNavigationView.visibility = View.VISIBLE
             }
 
         }
@@ -579,7 +638,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                             return
                         }
                         currentLocation = LatLng(location.latitude, location.longitude)
-                        map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 13f))
+                        map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 13f))
                     }
                 }
             })
@@ -658,6 +717,14 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
 
+    fun zoomToMarker(location: LatLng) {
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 15f))
+        resultList.visibility = View.GONE
+        showResult.visibility = View.VISIBLE
+        showMap.visibility = View.GONE
+    }
+
+
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<String?>,
@@ -674,9 +741,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
 
     private fun checkedStateColor(
-        enabledColor: Int = Color.parseColor("#03DAC5"), // Capri
-        pressedColor: Int = Color.parseColor("#03DAC5"), // Cyber yellow
-        focusedColor: Int = Color.parseColor("#03DAC5") // Aqua
+        enabledColor: Int = Color.parseColor("#4CAF50"),
+        pressedColor: Int = Color.parseColor("#4CAF50"),
+        focusedColor: Int = Color.parseColor("#4CAF50")
     ): ColorStateList {
         val states = arrayOf(
             intArrayOf(android.R.attr.state_enabled),
@@ -692,9 +759,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun uncheckedStateColor(
-        enabledColor: Int = Color.parseColor("#A9A9A9"), // Capri
-        pressedColor: Int = Color.parseColor("#A9A9A9"), // Cyber yellow
-        focusedColor: Int = Color.parseColor("#A9A9A9") // Aqua
+        enabledColor: Int = Color.parseColor("#A9A9A9"),
+        pressedColor: Int = Color.parseColor("#A9A9A9"),
+        focusedColor: Int = Color.parseColor("#A9A9A9")
     ): ColorStateList {
         val states = arrayOf(
             intArrayOf(android.R.attr.state_enabled),

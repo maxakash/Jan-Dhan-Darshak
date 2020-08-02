@@ -29,7 +29,6 @@
             android:layout_marginEnd="10dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="State Bank of India"
             android:textColor="#000"
             android:textSize="20sp"
             android:textStyle="normal" />
@@ -44,7 +43,6 @@
             android:ellipsize="end"
             android:visibility="visible"
             android:maxLines="1"
-            android:text=""
             android:textColor="#909293"
             android:textSize="13sp"
             android:textStyle="normal" />
@@ -84,7 +82,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:text="DIRECTIONS"
-                    android:textColor="#3D7AFC" />
+                    android:textColor="@color/colorAccent" />
 
 
             </LinearLayout>
@@ -111,7 +109,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:text="CALL"
-                    android:textColor="#3D7AFC" />
+                    android:textColor="@color/colorAccent" />
 
 
             </LinearLayout>
@@ -138,7 +136,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:text="FAVOURITE"
-                    android:textColor="#3D7AFC" />
+                    android:textColor="@color/colorAccent" />
 
 
             </LinearLayout>
@@ -166,7 +164,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:text="SHARE"
-                    android:textColor="#3D7AFC" />
+                    android:textColor="@color/colorAccent" />
 
 
             </LinearLayout>

@@ -2,33 +2,51 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:id="@+id/resultItem"
+    android:orientation="horizontal"
     android:gravity="center_vertical"
     android:layout_marginBottom="5dp"
     android:background="#fff">
 
-    <TextView
-        android:id="@+id/result_name"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/resultItem"
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:layout_height="wrap_content"
-        android:text="PNB ATM"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="20dp"
-        android:textSize="16sp"
-        android:textColor="#000"/>
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/result_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="PNB ATM"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="20dp"
+            android:textSize="16sp"
+            android:textColor="#000"/>
 
-    <TextView
-        android:id="@+id/result_address"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Jatpura makimpur Road, Bulandshahr"
-        android:maxLines="2"
-        android:layout_marginStart="10dp"
-        android:layout_marginBottom="20dp"
-        android:textSize="14sp"
-        android:ellipsize="end"
-        android:textColor="#909293"/>
+        <TextView
+            android:id="@+id/result_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Jatpura makimpur Road, Bulandshahr"
+            android:maxLines="2"
+            android:layout_marginStart="10dp"
+            android:layout_marginBottom="20dp"
+            android:textSize="14sp"
+            android:ellipsize="end"
+            android:textColor="#909293"/>
+
+    </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/result_detail"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="#fff"
+        android:layout_gravity="center_vertical"
+        android:layout_marginEnd="20dp"
+        android:src="@drawable/result_detail"/>
+
+
 
 
 

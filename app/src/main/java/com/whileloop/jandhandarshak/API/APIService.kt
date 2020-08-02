@@ -17,4 +17,10 @@ interface APIService {
 
     @GET("nearbysearch/json?")
     fun filterByOpenNow( @Query("type") nearbyPlace: String,@Query("opennow") opennow: String,@Query("location") latlng: String, @Query("radius") radius: Int, @Query("language") language: String, @Query("key") api: String): Call<String>
+
+    @GET("nearbysearch/json?")
+    fun filterByOpenNowKeyword( @Query("opennow") opennow: String,@Query("keyword") query: String,@Query("location") latlng: String, @Query("radius") radius: Int, @Query("language") language: String, @Query("key") api: String): Call<String>
+
+    @GET("nearbysearch/json?")
+    fun filterByDistanceKeyword( @Query("keyword") query: String,@Query("rankby") rankyby: String,@Query("location") latlng: String, @Query("language") language: String, @Query("key") api: String): Call<String>
 }
