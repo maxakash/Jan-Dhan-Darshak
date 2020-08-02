@@ -4,6 +4,11 @@
 <p float="left">
   <img src="https://i.imgur.com/a2nvlBe.jpg" width="150" alt="Jan Dhan Darshak Home UI"/>
   <img src="https://i.imgur.com/DJr7Ejz.jpg" width="150" alt="Jan Dhan Darshak filter" /> 
+  <img src="https://i.imgur.com/bBMFDtc.jpg" width="150" alt="Jan Dhan Darshak filter" />
+  <img src="https://i.imgur.com/AEXfTkU.jpg" width="150" alt="Jan Dhan Darshak filter" />
+  <img src="https://i.imgur.com/2Yx1N4v.jpg" width="150" alt="Jan Dhan Darshak filter" />
+  <img src="https://i.imgur.com/vmm1UEs.jpg" width="150" alt="Jan Dhan Darshak filter" />
+  <img src="https://i.imgur.com/6OobMcz.jpg" width="150" alt="Jan Dhan Darshak filter" />
 </p>
 
 ## Implemented Features
