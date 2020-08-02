@@ -96,6 +96,41 @@ class MainActivityViewModel : ViewModel() {
 
     }
 
+    fun getFilterByDistance(
+        currentLocation: LatLng,
+        type: String,
+        context: Context,
+        map: GoogleMap,
+        language: String,
+        rankBy: String
+    ) {
+        loading.value = true
+        val request = ServiceBuilder.buildService(APIService::class.java)
+        val call = request.filterByDistance(
+            latlng = "${currentLocation.latitude},${currentLocation.longitude}",
+            nearbyPlace = type,
+            language = language,
+            rankyby = rankBy,
+            api = "AIzaSyCUYN_YgHg6FaPWzLgF4Pcr-pBfIwzGcaI"
+        )
+        call.enqueue(object : Callback<String> {
+
+            override fun onResponse(call: Call<String>?, response: Response<String>?) {
+
+                if (response != null) {
+                    println(response.raw().request().url())
+                    showNearbyPlaces(parseJSON(response.body()), context, map)
+                }
+            }
+
+            override fun onFailure(call: Call<String>?, t: Throwable?) {
+                println(t?.message)
+            }
+
+        })
+
+    }
+
 
     fun parseJSON(jsonData: String?): ArrayList<HashMap<String?, String?>?> {
         var jsonArray: JSONArray? = null
@@ -212,7 +247,7 @@ class MainActivityViewModel : ViewModel() {
                 java.lang.Double.valueOf(nearbyPlacesList[0]?.get("lng")!!)
             )
             map.moveCamera(CameraUpdateFactory.newLatLng(latLng))
-            map.animateCamera(CameraUpdateFactory.zoomTo(12f))
+            map.animateCamera(CameraUpdateFactory.zoomTo(11f))
             loading.value = false
         } catch (e: Exception) {
             e.printStackTrace()

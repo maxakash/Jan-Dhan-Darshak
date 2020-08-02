@@ -60,6 +60,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var locationListener: LocationListener
     private lateinit var currentLocation: LatLng
     private var markerId: String = ""
+    private lateinit var selectedCategory:String
     private val loading = Observer<Boolean> { isLoading ->
 
         if (!isLoading) {
@@ -84,6 +85,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
                 R.id.atms -> {
                     item.isChecked = true
+                    selectedCategory = "atm"
                     searchBar.visibility = View.GONE
                     searchResultbar.visibility = View.VISIBLE
                     fab.visibility = View.GONE
@@ -93,6 +95,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 }
                 R.id.branch -> {
                     item.isChecked = true
+                    selectedCategory = "bank"
                     searchBar.visibility = View.GONE
                     searchResultbar.visibility = View.VISIBLE
                     fab.visibility = View.GONE
@@ -104,6 +107,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
                 R.id.postOffice -> {
                     item.isChecked = true
+                    selectedCategory = "post_office"
                     searchBar.visibility = View.GONE
                     searchResultbar.visibility = View.VISIBLE
                     fab.visibility = View.GONE
@@ -114,6 +118,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 }
                 R.id.csc -> {
                     item.isChecked = true
+                    selectedCategory = "Jan Seva Kendra"
                     markerType.text = getString(R.string.csc)
                     searchResultText.text = getString(R.string.csc)
                     fab.visibility = View.GONE
@@ -411,6 +416,17 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 val detailIntent = Intent(this, PlaceDetails::class.java)
                 detailIntent.putExtra("placeId",markerId)
                 startActivity(detailIntent)
+            }
+
+            R.id.distance -> {
+                distance.setTextColor(ContextCompat.getColor(this,R.color.colorAccent))
+
+               // distance.strokeColor = R.color.colorAccent
+                viewModel.getFilterByDistance(currentLocation,selectedCategory,this,map,deviceLanguage,"distance")
+            }
+
+            R.id.relevance -> {
+                viewModel.getFilterByDistance(currentLocation,selectedCategory,this,map,deviceLanguage,"distance")
             }
 
         }
