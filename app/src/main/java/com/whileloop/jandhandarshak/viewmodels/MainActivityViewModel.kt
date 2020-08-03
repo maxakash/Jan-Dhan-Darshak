@@ -206,7 +206,7 @@ class MainActivityViewModel : ViewModel() {
                     println(response.raw().request().url())
                     showNearbyPlaces(parseJSON(response.body()), context, map, currentLocation)
                 } else {
-                    context.infoToast("No results found.")
+                    context.infoToast(context.getString(R.string.noresults))
                 }
             }
 
@@ -470,6 +470,11 @@ class MainActivityViewModel : ViewModel() {
 
         map.clear()
         val list = preferences.getArrayPrefs("locations", context)
+
+        if(list.isEmpty()){
+            context.infoToast(context.getString(R.string.noFavoourite))
+            return
+        }
 
         var latitude:Double? = null
         var longitude:Double? = null

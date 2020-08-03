@@ -30,4 +30,7 @@
     <string name="missingBankSend">تفصیلات بھیجیں</string>
     <string name="missingBankAddress">بینک کا پتہ</string>
     <string name="missingBankname">بینک کا نام</string>
+    <string name="noFavoourite">کوئی پسندیدہ مقامات نہیں</string>
+    <string name="markedFavoourite">پسندیدہ مقامات پر شامل کیا گیا</string>
+    <string name="noresults">کوئی نتیجہ نہیں.</string>
 </resources>

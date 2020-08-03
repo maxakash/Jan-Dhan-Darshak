@@ -178,7 +178,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, TextToSpeech.OnIni
                     )
                 }
                 R.id.bankMitra -> {
-                    infoToast(getString(R.string.optionNotAvailable))
+                    infoToast(getString(R.string.noresults))
 
                 }
             }

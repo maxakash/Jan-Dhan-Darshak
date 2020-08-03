@@ -30,4 +30,7 @@
     <string name="missingBankSend">વિગતો મોકલો</string>
     <string name="missingBankAddress">બેંક સરનામું</string>
     <string name="missingBankname">બેંકનું નામ</string>
+    <string name="noFavoourite">કોઈ પ્રિય સ્થાનો નથી</string>
+    <string name="markedFavoourite">મનપસંદ સ્થળોએ ઉમેર્યું</string>
+    <string name="noresults">કોઈ પરિણામો મળ્યા નથી.</string>
 </resources>

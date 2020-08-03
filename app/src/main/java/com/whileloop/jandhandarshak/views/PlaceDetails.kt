@@ -23,9 +23,9 @@ class PlaceDetails : AppCompatActivity() {
 
     private lateinit var viewModel: PlaceDetailViewModel
     private lateinit var placeDetails: Place
-    private lateinit var placeId:String
-    private var name:String=""
-    private var address:String=""
+    private lateinit var placeId: String
+    private var name: String = ""
+    private var address: String = ""
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,7 +47,7 @@ class PlaceDetails : AppCompatActivity() {
 
             placeDetails = placeDetail
 
-            if (placeDetail.address != null){
+            if (placeDetail.address != null) {
                 placeAddress.text = placeDetail.address
                 address = placeDetail.address.toString()
             }
@@ -55,7 +55,7 @@ class PlaceDetails : AppCompatActivity() {
 
             if (placeDetail.name != null)
                 name = placeDetail.name.toString()
-                placeName.text = placeDetail.name
+            placeName.text = placeDetail.name
 
             if (placeDetail.name != null)
                 placeName.text = placeDetail.name
@@ -83,7 +83,7 @@ class PlaceDetails : AppCompatActivity() {
         })
     }
 
-//handles user click events
+    //handles user click events
     @SuppressLint("MissingPermission")
     fun onClick(view: View) {
 
@@ -106,12 +106,23 @@ class PlaceDetails : AppCompatActivity() {
             }
 
             R.id.placeSave -> {
-                viewModel.markFavourite(name,"${placeDetails.latLng?.latitude} ,${placeDetails.latLng?.longitude}",placeId,address,this)
+                try {
+                    viewModel.markFavourite(
+                        name,
+                        "${placeDetails.latLng?.latitude} ,${placeDetails.latLng?.longitude}",
+                        placeId,
+                        address,
+                        this
+                    )
+
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
             }
 
             R.id.placeShare -> {
                 val uri =
-                    "https://www.google.com/maps/?q=" + placeDetails.latLng?.latitude + "," +  placeDetails.latLng?.longitude
+                    "https://www.google.com/maps/?q=" + placeDetails.latLng?.latitude + "," + placeDetails.latLng?.longitude
                 val sharingIntent = Intent(Intent.ACTION_SEND)
                 sharingIntent.type = "text/plain"
                 sharingIntent.putExtra(Intent.EXTRA_TEXT, uri)
@@ -135,7 +146,8 @@ class PlaceDetails : AppCompatActivity() {
         } else {
             if (placeDetails.phoneNumber != null) {
                 println("clicked here")
-                val intent = Intent(Intent.ACTION_CALL, Uri.parse("tel:" + placeDetails.phoneNumber))
+                val intent =
+                    Intent(Intent.ACTION_CALL, Uri.parse("tel:" + placeDetails.phoneNumber))
                 startActivity(intent)
             } else {
                 infoToast(getString(R.string.nophoneavailable))
@@ -155,7 +167,8 @@ class PlaceDetails : AppCompatActivity() {
                 println("permission granted")
                 if (placeDetails.phoneNumber != null) {
                     println("clicked here")
-                    val intent = Intent(Intent.ACTION_CALL, Uri.parse("tel:" + placeDetails.phoneNumber))
+                    val intent =
+                        Intent(Intent.ACTION_CALL, Uri.parse("tel:" + placeDetails.phoneNumber))
                     startActivity(intent)
                 } else {
                     infoToast("Phone number not available")
