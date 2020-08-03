@@ -26,7 +26,7 @@ Our aim is to upgrade this app making it more feasible by providing better funct
    - Added feature to filter search results based on Relevance, Distance and Working Hours.
    - Added Text to speech feature.
    - Giving options to user whether to use text or audio for results
-   - Implementing Navigation features like Add missing Banks Suggestion and Favourite Locations and support feature
+   - Implemented Navigation features like Add missing Banks Suggestion and Favourite Locations and support feature
    
 APK Link : https://www.dropbox.com/s/6r96vgwr7rqa42d/Jan%20Dhan%20Darshak.apk?dl=1
     
