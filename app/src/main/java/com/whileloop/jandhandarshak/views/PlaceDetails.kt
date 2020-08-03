@@ -1,11 +1,15 @@
 package com.whileloop.jandhandarshak.views
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.libraries.places.api.Places
@@ -92,13 +96,7 @@ class PlaceDetails : AppCompatActivity() {
 
             R.id.placeCall -> {
 
-                if (placeDetails.phoneNumber != null) {
-                    println("clicked here")
-                    val intent = Intent(Intent.ACTION_CALL, Uri.parse("tel:" + placeDetails.phoneNumber))
-                    startActivity(intent)
-                } else {
-                    infoToast("Phone number not available")
-                }
+                getCallPermission()
             }
 
             R.id.placeSave -> {
@@ -112,6 +110,50 @@ class PlaceDetails : AppCompatActivity() {
                 sharingIntent.type = "text/plain"
                 sharingIntent.putExtra(Intent.EXTRA_TEXT, uri)
                 startActivity(Intent.createChooser(sharingIntent, "Share in..."))
+            }
+        }
+    }
+
+
+    private fun getCallPermission() {
+        if (ContextCompat.checkSelfPermission(
+                applicationContext,
+                Manifest.permission.CALL_PHONE
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                this@PlaceDetails,
+                arrayOf(Manifest.permission.CALL_PHONE),
+                1937
+            )
+        } else {
+            if (placeDetails.phoneNumber != null) {
+                println("clicked here")
+                val intent = Intent(Intent.ACTION_CALL, Uri.parse("tel:" + placeDetails.phoneNumber))
+                startActivity(intent)
+            } else {
+                infoToast(getString(R.string.nophoneavailable))
+            }
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String?>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == 1937) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                println("permission granted")
+                if (placeDetails.phoneNumber != null) {
+                    println("clicked here")
+                    val intent = Intent(Intent.ACTION_CALL, Uri.parse("tel:" + placeDetails.phoneNumber))
+                    startActivity(intent)
+                } else {
+                    infoToast("Phone number not available")
+                }
             }
         }
     }

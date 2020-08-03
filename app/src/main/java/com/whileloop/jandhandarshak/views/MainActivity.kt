@@ -27,6 +27,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -44,16 +45,21 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.textfield.TextInputLayout
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem
 import com.mikepenz.materialdrawer.model.ProfileDrawerItem
 import com.mikepenz.materialdrawer.model.interfaces.iconRes
 import com.mikepenz.materialdrawer.model.interfaces.nameRes
 import com.mikepenz.materialdrawer.model.interfaces.nameText
-import com.mikepenz.materialdrawer.model.interfaces.withName
+import com.mikepenz.materialdrawer.model.interfaces.selectedColorRes
 import com.mikepenz.materialdrawer.util.addStickyFooterItem
 import com.mikepenz.materialdrawer.widget.AccountHeaderView
 import com.whileloop.jandhandarshak.R
 import com.whileloop.jandhandarshak.listadapters.ResultListAdapter
+import com.whileloop.jandhandarshak.utils.infoToast
+import com.whileloop.jandhandarshak.utils.successToast
 import com.whileloop.jandhandarshak.viewmodels.MainActivityViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
@@ -118,6 +124,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, TextToSpeech.OnIni
                     item.isChecked = true
                     selectedCategory = "atm"
                     showAudiMessage = false
+                    searchQuery = ""
                     searchBar.visibility = View.GONE
                     searchResultbar.visibility = View.VISIBLE
                     fab.visibility = View.GONE
@@ -129,6 +136,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, TextToSpeech.OnIni
                     item.isChecked = true
                     selectedCategory = "bank"
                     showAudiMessage = false
+                    searchQuery = ""
                     searchBar.visibility = View.GONE
                     searchResultbar.visibility = View.VISIBLE
                     fab.visibility = View.GONE
@@ -141,6 +149,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, TextToSpeech.OnIni
                 R.id.postOffice -> {
                     item.isChecked = true
                     selectedCategory = "post_office"
+                    searchQuery = ""
                     showAudiMessage = false
                     searchBar.visibility = View.GONE
                     searchResultbar.visibility = View.VISIBLE
@@ -153,6 +162,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, TextToSpeech.OnIni
                 R.id.csc -> {
                     item.isChecked = true
                     selectedCategory = "Jan Seva Kendra"
+                    searchQuery = ""
                     showAudiMessage = false
                     markerType.text = getString(R.string.csc)
                     searchResultText.text = getString(R.string.csc)
@@ -168,9 +178,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, TextToSpeech.OnIni
                     )
                 }
                 R.id.bankMitra -> {
-                    markerType.text = getString(R.string.bankMitra)
-                    searchResultText.text = getString(R.string.bankMitra)
-                    item.isChecked = true
+                    infoToast(getString(R.string.optionNotAvailable))
 
                 }
             }
@@ -254,18 +262,25 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, TextToSpeech.OnIni
             nameRes = R.string.favouriteLocations
             typeface = tf
             iconRes = R.drawable.heart
+            selectedColorRes = R.color.colorAccent
+            isSelectable = false
+
         }
         val item2 = PrimaryDrawerItem().apply {
             identifier = 1
             nameRes = R.string.missingBank
             typeface = tf
             iconRes = R.drawable.missing
+            selectedColorRes = R.color.colorAccent
+            isSelectable = false
         }
         val item3 = PrimaryDrawerItem().apply {
             identifier = 1
             nameRes = R.string.feedback
             typeface = tf
             iconRes = R.drawable.feedback
+            selectedColorRes = R.color.colorAccent
+            isSelectable = false
         }
 
         val item4 = PrimaryDrawerItem().apply {
@@ -273,18 +288,33 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, TextToSpeech.OnIni
             nameRes = R.string.help
             typeface = tf
             iconRes = R.drawable.help
+            selectedColorRes = R.color.colorAccent
+            isSelectable = false
         }
         val item5 = PrimaryDrawerItem().apply {
             identifier = 1
             nameRes = R.string.aboutUs
             typeface = tf
             iconRes = R.drawable.aboutinfo
+            selectedColorRes = R.color.colorAccent
+            isSelectable = false
         }
         val item6 = PrimaryDrawerItem().apply {
             identifier = 1
             nameRes = R.string.disclaimer
             typeface = tf
             iconRes = R.drawable.about
+            selectedColorRes = R.color.colorAccent
+            isSelectable = false
+        }
+
+        val item7 = PrimaryDrawerItem().apply {
+            identifier = 1
+            nameText = "Department of Financial Service"
+            typeface = tf
+            selectedColorRes = R.color.colorAccent
+            isEnabled = false
+            isSelectable = false
         }
 
         slider.apply {
@@ -293,13 +323,103 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, TextToSpeech.OnIni
 
             )
             onDrawerItemClickListener = { v, drawerItem, position ->
-                // listener action
+
+                drawerItem.isSelected = false
+
+
+
+                when (position) {
+                    1 -> {
+
+                    }
+                    2 -> {
+                        val dialog = MaterialAlertDialogBuilder(this@MainActivity)
+                            .setView(R.layout.missing_bank_details)
+                            .show()
+                        dialog.findViewById<MaterialButton>(R.id.missingBankSend)
+                            ?.setOnClickListener {
+
+                                if (dialog.findViewById<TextInputLayout>(R.id.missingBankName)?.editText?.text.isNullOrEmpty() || dialog.findViewById<TextInputLayout>(
+                                        R.id.missingBankAddress
+                                    )?.editText?.text.isNullOrEmpty()
+                                ) {
+                                    infoToast(getString(R.string.editTextError))
+                                } else {
+
+                                    successToast(getString(R.string.feedbackdone))
+                                    if (dialog.isShowing)
+                                        dialog.dismiss()
+                                }
+
+                            }
+                    }
+                    3 -> {
+
+                        val dialog = MaterialAlertDialogBuilder(this@MainActivity)
+                            .setView(R.layout.user_feedback)
+                            .show()
+                        dialog.findViewById<MaterialButton>(R.id.sendFeedback)?.setOnClickListener {
+
+                            if (dialog.findViewById<TextInputLayout>(R.id.userName)?.editText?.text.isNullOrEmpty() || dialog.findViewById<TextInputLayout>(
+                                    R.id.userMobile
+                                )?.editText?.text.isNullOrEmpty() || dialog.findViewById<TextInputLayout>(
+                                    R.id.userFeedback
+                                )?.editText?.text.isNullOrEmpty()
+                            ) {
+                                infoToast(getString(R.string.editTextError))
+                            } else {
+
+                                successToast(getString(R.string.feedbackdone))
+                                if (dialog.isShowing)
+                                    dialog.dismiss()
+                            }
+
+                        }
+
+                    }
+                    4 -> {
+                        val url = "http://dbtgis.nic.in/jandhan/eng_hlp.pdf"
+                        val i = Intent(Intent.ACTION_VIEW)
+                        i.data = Uri.parse(url)
+                        startActivity(i)
+                    }
+                    5 -> {
+                        showDialog(getString(R.string.about), getString(R.string.aboutUs))
+                    }
+                    6 -> {
+
+                        showDialog(
+                            getString(R.string.disclaimerinfo),
+                            getString(R.string.disclaimer)
+                        )
+                    }
+//                    7 -> {
+//
+//                        val url = "https://financialservices.gov.in/"
+//                        val i = Intent(Intent.ACTION_VIEW)
+//                        i.data = Uri.parse(url)
+//                        startActivity(i)
+//                    }
+
+                }
+
                 false
 
             }
         }
-        slider.addStickyFooterItem(PrimaryDrawerItem().withName("Department of Financial Service"))
+        slider.addStickyFooterItem(item7)
 
+    }
+
+    private fun showDialog(message: String, title: String) {
+
+        MaterialAlertDialogBuilder(this, R.style.MaterialAlertDialog)
+            .setTitle(title)
+            .setMessage(message)
+            .setPositiveButton("Ok") { dialog, which ->
+                // Respond to positive button press
+            }
+            .show()
     }
 
     //handles gps location
@@ -490,7 +610,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, TextToSpeech.OnIni
                 openNow.strokeColor = uncheckedStateColor()
                 openNow.setTextColor(uncheckedStateColor())
 
-                if (this::searchQuery.isInitialized) {
+                if (this::searchQuery.isInitialized && searchQuery != "") {
                     viewModel.getFilterByDistanceKeyword(
                         currentLocation,
                         searchQuery,
@@ -499,7 +619,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, TextToSpeech.OnIni
                         deviceLanguage,
                         "distance"
                     )
-                } else {
+                } else if (this::selectedCategory.isInitialized) {
                     if (selectedCategory != "Jan Seva Kendra")
                         viewModel.getFilterByDistance(
                             currentLocation,
@@ -509,7 +629,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, TextToSpeech.OnIni
                             deviceLanguage,
                             "distance"
                         )
-                    else
+                    else if (selectedCategory == "Jan Seva Kendra")
                         viewModel.getFilterByDistanceKeyword(
                             currentLocation,
                             "Jan Seva Kendra",
@@ -534,11 +654,11 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, TextToSpeech.OnIni
                 openNow.strokeColor = uncheckedStateColor()
                 openNow.setTextColor(uncheckedStateColor())
 
-                if (this::searchQuery.isInitialized) {
+                if (this::searchQuery.isInitialized && searchQuery != "") {
                     viewModel.getVoiceData(
                         currentLocation, searchQuery, this, map, deviceLanguage
                     )
-                } else {
+                } else if (this::selectedCategory.isInitialized) {
                     if (selectedCategory != "Jan Seva Kendra")
                         viewModel.getData(
                             currentLocation,
@@ -547,7 +667,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, TextToSpeech.OnIni
                             map,
                             deviceLanguage
                         )
-                    else
+                    else if (selectedCategory == "Jan Seva Kendra")
                         viewModel.getVoiceData(
                             currentLocation,
                             "Jan Seva Kendra",
@@ -570,13 +690,12 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, TextToSpeech.OnIni
                 relevance.strokeColor = uncheckedStateColor()
                 openNow.strokeColor = checkedStateColor()
                 openNow.setTextColor(checkedStateColor())
-
-                if (this::searchQuery.isInitialized) {
+                if (this::searchQuery.isInitialized && searchQuery != "") {
                     viewModel.getFilterByOpenNowKeyword(
                         currentLocation, this, map, deviceLanguage, searchQuery
                     )
-                } else {
-                    if (selectedCategory != "Jan Seva Kendra")
+                } else if (this::selectedCategory.isInitialized) {
+                    if (selectedCategory != "Jan Seva Kendra") {
                         viewModel.getFilterByOpenNow(
                             currentLocation,
                             selectedCategory,
@@ -584,14 +703,16 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, TextToSpeech.OnIni
                             map,
                             deviceLanguage
                         )
-                    else (selectedCategory == "Jan Seva Kendra")
-                    viewModel.getFilterByOpenNowKeyword(
-                        currentLocation,
-                        this,
-                        map,
-                        deviceLanguage,
-                        "Jan Seva Kendra"
-                    )
+
+                        println("reached in open now")
+                    } else if (selectedCategory == "Jan Seva Kendra")
+                        viewModel.getFilterByOpenNowKeyword(
+                            currentLocation,
+                            this,
+                            map,
+                            deviceLanguage,
+                            "Jan Seva Kendra"
+                        )
                 }
 
             }
@@ -864,6 +985,22 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, TextToSpeech.OnIni
     fun speakOut(message: String) {
 
         tts!!.speak(message, TextToSpeech.QUEUE_FLUSH, null, "")
+    }
+
+    override fun onBackPressed() {
+
+        if(resultList.isVisible || searchResultbar.isVisible || showResult.isVisible || showMap.isVisible ){
+            resultList.visibility = View.GONE
+            fab.visibility = View.VISIBLE
+            searchResultbar.visibility = View.GONE
+            searchBar.visibility = View.VISIBLE
+            showMap.visibility = View.GONE
+            showResult.visibility = View.GONE
+
+        }else{
+            super.onBackPressed()
+        }
+
     }
 
 

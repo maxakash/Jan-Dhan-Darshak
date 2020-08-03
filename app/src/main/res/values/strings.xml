@@ -58,7 +58,21 @@
   <string name="searchHere">Search Here</string>
   <string name="openNow">Open Now</string>
   <string name="closedNow">Closed Now</string>
+  <string name="missingBankname">Bank Name</string>
+  <string name="missingBankAddress">Bank Address</string>
+  <string name="missingBankSend">Send Details</string>
+  <string name="editTextError">Enter all fields.</string>
   <string name="directions">Directions</string>
+  <string name="feedbackdone">Thanks for your feedback.</string>
+  <string name="userName">Full Name</string>
+  <string name="userMobile">Mobile Number</string>
+  <string name="userSuggestion">Suggestion</string>
+  <string name="sendFeedback">Send Feedback</string>
+  <string name="optionNotAvailable">This option is currently unavailable</string>
+  <string name="nophoneavailable">Phone number not available</string>
+  <string name="about">The Jan Dhan Darshak Mobile application provides an interface for citizen to view the banking infrastructure in India consisting of Bank Branches, ATMs, Bank Mitra locations. The data is collated by Department of Financial services from schedule commercial Banks both public and private sector.</string>
+  <string name="accept">Ok</string>
+  <string name="disclaimerinfo">The information contained in the mobile application is provided and maintained by various scheduled commercial banks. No guarantee is given as to the accuracy or currency of any of the data. Therefore, in no event shall Department of Financial Services or its constituents be liable for any special, indirect or consequential damages or any damages whatsoever resulting from loss of use,data, or profits, whether in an action of contact, negligence,or other action, arising out of or in connection with the use of the information herein provided. The website is designed to serve as a secondary representation of Banking infrastructure, and is complied from the scheduled commercial Banks which are the primary sources for this public information. Users of this website are hereby notified that these primary sources should be consulted for verification of the information presented here. And Department of Financial Services or its constituents and the software developer,NIC, assume no legal responsibility for the information on this website.</string>
 
 
 </resources>

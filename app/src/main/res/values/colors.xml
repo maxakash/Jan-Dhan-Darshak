@@ -5,6 +5,7 @@
     <color name="colorAccent">#4CAF50</color>
     <color name="colorPrimarytrans">#03070B16</color>
     <color name="drawerTextColor">#191919</color>
+    <color name="white">#ffffff</color>
 
     <color name="unchecked">#A9A9A9</color>
     <color name="checked">#03DAC5</color>

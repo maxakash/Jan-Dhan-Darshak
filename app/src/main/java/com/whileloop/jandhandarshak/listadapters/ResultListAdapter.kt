@@ -56,7 +56,7 @@ class ResultListAdapter(
         val location = LatLng(lat, lng)
         val placeId = googlePlace["place_id"]
         val address = googlePlace["vicinity"]
-        println(googlePlace.toString())
+       // println(googlePlace.toString())
 
         if (placeName != null)
             holder.itemView.result_name.text = placeName

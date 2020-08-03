@@ -45,7 +45,7 @@ class MainActivityViewModel : ViewModel() {
         val call = request.getPlaces(
             latlng = "${currentLocation.latitude},${currentLocation.longitude}",
             nearbyPlace = type,
-            radius = 9000,
+            radius = 10000,
             language = language,
             api = "AIzaSyCUYN_YgHg6FaPWzLgF4Pcr-pBfIwzGcaI"
         )
@@ -193,7 +193,7 @@ class MainActivityViewModel : ViewModel() {
             nearbyPlace = type,
             language = language,
             opennow = "true",
-            radius = 8000,
+            radius = 10000,
             api = "AIzaSyCUYN_YgHg6FaPWzLgF4Pcr-pBfIwzGcaI"
         )
         call.enqueue(object : Callback<String> {
@@ -231,7 +231,7 @@ class MainActivityViewModel : ViewModel() {
             latlng = "${currentLocation.latitude},${currentLocation.longitude}",
             language = language,
             opennow = "true",
-            radius = 8000,
+            radius = 10000,
             query = query,
             api = "AIzaSyCUYN_YgHg6FaPWzLgF4Pcr-pBfIwzGcaI"
         )
@@ -287,10 +287,11 @@ class MainActivityViewModel : ViewModel() {
                         val duration = jsonObject.getJSONObject("duration")
                             .get("text").toString()
 
-                        val message = "The nearest location is $placeName which is  $distance and will take around $duration to reach there"
+                        val message =
+                            "The nearest location is $placeName which is  $distance and will take around $duration to reach there"
 
                         audioMessage.value = message
-                     //   getEnglishVoice(message)
+                        //   getEnglishVoice(message)
 
 
                     } catch (e: JSONException) {
@@ -359,7 +360,9 @@ class MainActivityViewModel : ViewModel() {
             if (!googlePlaceJson.isNull("vicinity")) {
                 vicinity = googlePlaceJson.getString("vicinity")
             }
-            if (!googlePlaceJson.isNull("opening_hours") && googlePlaceJson.isNull("opening_hours").toString().isEmpty()) {
+            if (!googlePlaceJson.isNull("opening_hours") && googlePlaceJson.isNull("opening_hours")
+                    .toString().isNotEmpty()
+            ) {
                 isOpen = googlePlaceJson.getJSONObject("opening_hours").getString("open_now")
                 googlePlaceMap["isOpen"] = isOpen
             } else {
@@ -391,108 +394,77 @@ class MainActivityViewModel : ViewModel() {
         currentLocation: LatLng
     ) {
 
-        map.clear()
-        placesList.value = nearbyPlacesList
-        for (i in nearbyPlacesList.indices) {
-            val markerOptions = MarkerOptions()
-            val googlePlace =
-                nearbyPlacesList[i]
-            val lat = googlePlace?.get("lat")!!.toDouble()
-            val lng = googlePlace["lng"]!!.toDouble()
-            val placeName = googlePlace["place_name"]
-            val latLng = LatLng(lat, lng)
-            val placeId = googlePlace["place_id"]
 
-            markerOptions.position(latLng)
-            markerOptions.title(placeName)
-            markerOptions.snippet(googlePlace["vicinity"])
+        try {
+            map.clear()
+            placesList.value = nearbyPlacesList
+            for (i in nearbyPlacesList.indices) {
+                val markerOptions = MarkerOptions()
+                val googlePlace =
+                    nearbyPlacesList[i]
+                val lat = googlePlace?.get("lat")!!.toDouble()
+                val lng = googlePlace["lng"]!!.toDouble()
+                val placeName = googlePlace["place_name"]
+                val latLng = LatLng(lat, lng)
+                val placeId = googlePlace["place_id"]
 
-            val height = 100
-            val width = 100
-            val bitmap =
-                BitmapFactory.decodeResource(context.resources, R.drawable.marker2)
-            val smallMarker = Bitmap.createScaledBitmap(bitmap, width, height, false)
-            markerOptions.icon(BitmapDescriptorFactory.fromBitmap(smallMarker))
-            val marker = map.addMarker(markerOptions)
+                markerOptions.position(latLng)
+                markerOptions.title(placeName)
+                markerOptions.snippet(googlePlace["vicinity"])
+
+                val height = 100
+                val width = 100
+                val bitmap =
+                    BitmapFactory.decodeResource(context.resources, R.drawable.marker2)
+                val smallMarker = Bitmap.createScaledBitmap(bitmap, width, height, false)
+                markerOptions.icon(BitmapDescriptorFactory.fromBitmap(smallMarker))
+                val marker = map.addMarker(markerOptions)
 
 
-            if (!googlePlace["isOpen"].isNullOrEmpty()) {
-                marker.tag = googlePlace["isOpen"] + " " + placeId
+                if (!googlePlace["isOpen"].isNullOrEmpty()) {
+                    marker.tag = googlePlace["isOpen"] + " " + placeId
+                }
+
             }
 
-
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
 
-        if (nearbyPlacesList.isNotEmpty()) {
-            try {
 
-                println(nearbyPlacesList[0]?.get("lng"))
-                val latLng = LatLng(
-                    java.lang.Double.valueOf(nearbyPlacesList[0]?.get("lat")!!),
-                    java.lang.Double.valueOf(nearbyPlacesList[0]?.get("lng")!!)
-                )
-                val placeName = nearbyPlacesList[0]?.get("place_name").toString()
-                getDistance(currentLocation, latLng,placeName)
-                map.moveCamera(CameraUpdateFactory.newLatLng(latLng))
-                map.animateCamera(CameraUpdateFactory.zoomTo(11f))
-                loading.value = false
 
-                if (context is MainActivity)
-                    context.speakOut("")
+    if (nearbyPlacesList.isNotEmpty())
+    {
+        try {
 
-            } catch (e: Exception) {
-                loading.value = false
-                context.infoToast("No results found.")
-                e.printStackTrace()
-            }
-        }else{
-            if(context is MainActivity)
-                context.hideResultList()
+            println(nearbyPlacesList[0]?.get("lng"))
+            val latLng = LatLng(
+                java.lang.Double.valueOf(nearbyPlacesList[0]?.get("lat")!!),
+                java.lang.Double.valueOf(nearbyPlacesList[0]?.get("lng")!!)
+            )
+            val placeName = nearbyPlacesList[0]?.get("place_name").toString()
+            getDistance(currentLocation, latLng, placeName)
+            map.moveCamera(CameraUpdateFactory.newLatLng(latLng))
+            map.animateCamera(CameraUpdateFactory.zoomTo(11f))
+            loading.value = false
+
+            if (context is MainActivity)
+                context.speakOut("")
+
+        } catch (e: Exception) {
             loading.value = false
             context.infoToast("No results found.")
+            e.printStackTrace()
         }
+    }else
+    {
+        if (context is MainActivity)
+            context.hideResultList()
+        loading.value = false
+        context.infoToast("No results found.")
     }
+}
 
-
-//    fun getEnglishVoice(message:String){
-//        val request = ServiceBuilder2.buildService(APIService::class.java)
-//        val call = request.getEnglishVoice(
-//            message = message,
-//            apiKey = "e73e30d0-d53f-11ea-a8df-e37bc2ff56e5",
-//            uderid = 83154,
-//            action = "play",
-//            numeric = "hcurrency",
-//            language = "hi_mohita"
-//
-//        )
-//        call.enqueue(object : Callback<ResponseBody> {
-//
-//            override fun onResponse(call: Call<ResponseBody>?, response: Response<ResponseBody>?) {
-//
-//                if (response != null) {
-//                    println(response.raw().request().url())
-//                    println(response.body())
-//
-//                    val audioUrl =response.raw().request().url().toString()
-//
-//
-//                   val mPlayer = MediaPlayer()
-//
-//                    mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC)
-//                    mPlayer.setDataSource(audioUrl)
-//                    mPlayer.prepare();
-//
-//                    mPlayer.start();
-//
-//                }
-//            }
-//
-//            override fun onFailure(call: Call<ResponseBody>?, t: Throwable?) {
-//                println(t?.message)
-//            }
-//
-//        })
-//    }
 
 
 }

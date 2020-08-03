@@ -103,7 +103,7 @@
                     android:id="@+id/searchResultbar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="34dp"
+                    android:layout_marginTop="33dp"
                     android:background="#fff"
                     android:orientation="vertical"
                     android:visibility="gone">
