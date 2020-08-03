@@ -24,10 +24,11 @@ Our aim is to upgrade this app making it more feasible by providing better funct
    - **Call Option** feature will help the user to contact Bank Branch,Post offices and CSC to enquire any query.     
    - Improved maps UI by using **Google Maps API** as it customized build with agile experiences that bring the real world to your users with maps and street views.    
    - Added feature to filter search results based on Relevance, Distance and Working Hours.
-## Features to be Implemented
-   - Text to speech feature.
+   - Added Text to speech feature.
    - Giving options to user whether to use text or audio for results
-   - Implementing Navigation features like Add missing Banks Suggestion and Favouraite Locations and support feature etc
+   - Implementing Navigation features like Add missing Banks Suggestion and Favourite Locations and support feature
+   
+APK Link : https://www.dropbox.com/s/6r96vgwr7rqa42d/Jan%20Dhan%20Darshak.apk?dl=1
     
     
     
