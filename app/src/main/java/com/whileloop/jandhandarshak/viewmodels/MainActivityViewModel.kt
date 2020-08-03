@@ -12,8 +12,10 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.whileloop.jandhandarshak.API.APIService
 import com.whileloop.jandhandarshak.API.ServiceBuilder
+import com.whileloop.jandhandarshak.API.ServiceBuilder1
 import com.whileloop.jandhandarshak.R
 import com.whileloop.jandhandarshak.utils.infoToast
+import com.whileloop.jandhandarshak.views.MainActivity
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -21,12 +23,14 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
+import kotlin.collections.ArrayList
+
 
 class MainActivityViewModel : ViewModel() {
 
     val loading by lazy { MutableLiveData<Boolean>() }
+    val audioMessage by lazy { MutableLiveData<String>() }
     val placesList by lazy { MutableLiveData<ArrayList<HashMap<String?, String?>?>>() }
-
 
     //this gets nearby locations on the basis of relevance
     fun getData(
@@ -51,7 +55,7 @@ class MainActivityViewModel : ViewModel() {
 
                 if (response != null) {
                     println(response.raw().request().url())
-                    showNearbyPlaces(parseJSON(response.body()), context, map)
+                    showNearbyPlaces(parseJSON(response.body()), context, map, currentLocation)
                 }
             }
 
@@ -88,7 +92,7 @@ class MainActivityViewModel : ViewModel() {
 
                     println(response.raw().request().url())
 
-                    showNearbyPlaces(parseJSON(response.body()), context, map)
+                    showNearbyPlaces(parseJSON(response.body()), context, map, currentLocation)
                 }
             }
 
@@ -125,7 +129,7 @@ class MainActivityViewModel : ViewModel() {
 
                 if (response != null) {
                     println(response.raw().request().url())
-                    showNearbyPlaces(parseJSON(response.body()), context, map)
+                    showNearbyPlaces(parseJSON(response.body()), context, map, currentLocation)
                 }
             }
 
@@ -162,7 +166,7 @@ class MainActivityViewModel : ViewModel() {
 
                 if (response != null) {
                     println(response.raw().request().url())
-                    showNearbyPlaces(parseJSON(response.body()), context, map)
+                    showNearbyPlaces(parseJSON(response.body()), context, map, currentLocation)
                 }
             }
 
@@ -198,7 +202,7 @@ class MainActivityViewModel : ViewModel() {
 
                 if (response != null) {
                     println(response.raw().request().url())
-                    showNearbyPlaces(parseJSON(response.body()), context, map)
+                    showNearbyPlaces(parseJSON(response.body()), context, map, currentLocation)
                 } else {
                     context.infoToast("No results found.")
                 }
@@ -237,9 +241,62 @@ class MainActivityViewModel : ViewModel() {
 
                 if (response != null) {
                     println(response.raw().request().url())
-                    showNearbyPlaces(parseJSON(response.body()), context, map)
+                    showNearbyPlaces(parseJSON(response.body()), context, map, currentLocation)
                 } else {
                     context.infoToast("No results found.")
+                }
+            }
+
+            override fun onFailure(call: Call<String>?, t: Throwable?) {
+                println(t?.message)
+            }
+
+        })
+
+    }
+
+    //gets distance of a location from user location
+    private fun getDistance(
+        origin: LatLng,
+        destination: LatLng,
+        placeName: String
+    ) {
+        loading.value = true
+        val request = ServiceBuilder1.buildService(APIService::class.java)
+        val call = request.getDistance(
+            origin = "${origin.latitude},${origin.longitude}",
+            destinations = "${destination.latitude},${destination.longitude}",
+            api = "AIzaSyCUYN_YgHg6FaPWzLgF4Pcr-pBfIwzGcaI"
+        )
+        call.enqueue(object : Callback<String> {
+
+            override fun onResponse(call: Call<String>?, response: Response<String>?) {
+
+                if (response != null) {
+                    println(response.raw().request().url())
+                    try {
+                        val jsonObject = JSONObject(response.body()!!)
+                            .getJSONArray("rows")
+                            .getJSONObject(0)
+                            .getJSONArray("elements")
+                            .getJSONObject(0)
+
+                        val distance = jsonObject.getJSONObject("distance")
+                            .get("text").toString()
+
+                        val duration = jsonObject.getJSONObject("duration")
+                            .get("text").toString()
+
+                        val message = "The nearest location is $placeName which is  $distance and will take around $duration to reach there"
+
+                        audioMessage.value = message
+                     //   getEnglishVoice(message)
+
+
+                    } catch (e: JSONException) {
+                        e.printStackTrace()
+                    }
+
                 }
             }
 
@@ -302,7 +359,7 @@ class MainActivityViewModel : ViewModel() {
             if (!googlePlaceJson.isNull("vicinity")) {
                 vicinity = googlePlaceJson.getString("vicinity")
             }
-            if (!googlePlaceJson.isNull("opening_hours")) {
+            if (!googlePlaceJson.isNull("opening_hours") && googlePlaceJson.isNull("opening_hours").toString().isEmpty()) {
                 isOpen = googlePlaceJson.getJSONObject("opening_hours").getString("open_now")
                 googlePlaceMap["isOpen"] = isOpen
             } else {
@@ -330,11 +387,11 @@ class MainActivityViewModel : ViewModel() {
     private fun showNearbyPlaces(
         nearbyPlacesList: ArrayList<HashMap<String?, String?>?>,
         context: Context,
-        map: GoogleMap
+        map: GoogleMap,
+        currentLocation: LatLng
     ) {
 
         map.clear()
-
         placesList.value = nearbyPlacesList
         for (i in nearbyPlacesList.indices) {
             val markerOptions = MarkerOptions()
@@ -365,21 +422,78 @@ class MainActivityViewModel : ViewModel() {
 
 
         }
-        try {
-            println(nearbyPlacesList[0]?.get("lng"))
-            val latLng = LatLng(
-                java.lang.Double.valueOf(nearbyPlacesList[0]?.get("lat")!!),
-                java.lang.Double.valueOf(nearbyPlacesList[0]?.get("lng")!!)
-            )
-            map.moveCamera(CameraUpdateFactory.newLatLng(latLng))
-            map.animateCamera(CameraUpdateFactory.zoomTo(11f))
-            loading.value = false
-        } catch (e: Exception) {
+
+        if (nearbyPlacesList.isNotEmpty()) {
+            try {
+
+                println(nearbyPlacesList[0]?.get("lng"))
+                val latLng = LatLng(
+                    java.lang.Double.valueOf(nearbyPlacesList[0]?.get("lat")!!),
+                    java.lang.Double.valueOf(nearbyPlacesList[0]?.get("lng")!!)
+                )
+                val placeName = nearbyPlacesList[0]?.get("place_name").toString()
+                getDistance(currentLocation, latLng,placeName)
+                map.moveCamera(CameraUpdateFactory.newLatLng(latLng))
+                map.animateCamera(CameraUpdateFactory.zoomTo(11f))
+                loading.value = false
+
+                if (context is MainActivity)
+                    context.speakOut("")
+
+            } catch (e: Exception) {
+                loading.value = false
+                context.infoToast("No results found.")
+                e.printStackTrace()
+            }
+        }else{
+            if(context is MainActivity)
+                context.hideResultList()
             loading.value = false
             context.infoToast("No results found.")
-            e.printStackTrace()
         }
     }
 
 
+//    fun getEnglishVoice(message:String){
+//        val request = ServiceBuilder2.buildService(APIService::class.java)
+//        val call = request.getEnglishVoice(
+//            message = message,
+//            apiKey = "e73e30d0-d53f-11ea-a8df-e37bc2ff56e5",
+//            uderid = 83154,
+//            action = "play",
+//            numeric = "hcurrency",
+//            language = "hi_mohita"
+//
+//        )
+//        call.enqueue(object : Callback<ResponseBody> {
+//
+//            override fun onResponse(call: Call<ResponseBody>?, response: Response<ResponseBody>?) {
+//
+//                if (response != null) {
+//                    println(response.raw().request().url())
+//                    println(response.body())
+//
+//                    val audioUrl =response.raw().request().url().toString()
+//
+//
+//                   val mPlayer = MediaPlayer()
+//
+//                    mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC)
+//                    mPlayer.setDataSource(audioUrl)
+//                    mPlayer.prepare();
+//
+//                    mPlayer.start();
+//
+//                }
+//            }
+//
+//            override fun onFailure(call: Call<ResponseBody>?, t: Throwable?) {
+//                println(t?.message)
+//            }
+//
+//        })
+//    }
+
+
 }
+

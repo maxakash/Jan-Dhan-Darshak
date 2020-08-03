@@ -18,6 +18,7 @@ import android.location.LocationManager
 import android.net.Uri
 import android.os.Bundle
 import android.speech.RecognizerIntent
+import android.speech.tts.TextToSpeech
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -57,7 +58,7 @@ import com.whileloop.jandhandarshak.viewmodels.MainActivityViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 
-class MainActivity : AppCompatActivity(), OnMapReadyCallback {
+class MainActivity : AppCompatActivity(), OnMapReadyCallback, TextToSpeech.OnInitListener {
 
     private lateinit var viewModel: MainActivityViewModel
     private lateinit var map: GoogleMap
@@ -68,19 +69,32 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private var markerId: String = ""
     private lateinit var selectedCategory: String
     private lateinit var resultListAdapter: ResultListAdapter
+    private var tts: TextToSpeech? = null
+    private var showAudiMessage = false
+    private lateinit var searchQuery: String
+    private lateinit var mapLocations: ArrayList<HashMap<String?, String?>?>
     private val placesList = Observer<ArrayList<HashMap<String?, String?>?>> { placesList ->
 
         if (placesList.isEmpty())
             showResult.visibility = View.GONE
 
-        resultListAdapter.updateList(placesList)
+        resultListAdapter.updateList(placesList, currentLocation)
+        mapLocations = placesList
 
     }
+
+    private val audioMessage = Observer<String> { message ->
+
+        if (showAudiMessage)
+            speakOut(message)
+    }
+
     private val loading = Observer<Boolean> { isLoading ->
 
         if (!isLoading) {
             searchProgress.visibility = View.GONE
             searchResultClose.visibility = View.VISIBLE
+
         } else {
             searchProgress.visibility = View.VISIBLE
             searchResultClose.visibility = View.GONE
@@ -103,6 +117,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 R.id.atms -> {
                     item.isChecked = true
                     selectedCategory = "atm"
+                    showAudiMessage = false
                     searchBar.visibility = View.GONE
                     searchResultbar.visibility = View.VISIBLE
                     fab.visibility = View.GONE
@@ -113,6 +128,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 R.id.branch -> {
                     item.isChecked = true
                     selectedCategory = "bank"
+                    showAudiMessage = false
                     searchBar.visibility = View.GONE
                     searchResultbar.visibility = View.VISIBLE
                     fab.visibility = View.GONE
@@ -125,6 +141,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 R.id.postOffice -> {
                     item.isChecked = true
                     selectedCategory = "post_office"
+                    showAudiMessage = false
                     searchBar.visibility = View.GONE
                     searchResultbar.visibility = View.VISIBLE
                     fab.visibility = View.GONE
@@ -136,6 +153,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 R.id.csc -> {
                     item.isChecked = true
                     selectedCategory = "Jan Seva Kendra"
+                    showAudiMessage = false
                     markerType.text = getString(R.string.csc)
                     searchResultText.text = getString(R.string.csc)
                     fab.visibility = View.GONE
@@ -169,6 +187,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         viewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
         viewModel.loading.observe(this, loading)
         viewModel.placesList.observe(this, placesList)
+        viewModel.audioMessage.observe(this, audioMessage)
 
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
@@ -183,7 +202,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
         bottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
         bottomNavigationView.menu.setGroupCheckable(0, false, true)
-
 
         editTextQuery.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {
@@ -207,6 +225,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             layoutManager = LinearLayoutManager(this@MainActivity, RecyclerView.VERTICAL, false)
 
         }
+
+        tts = TextToSpeech(this, this)
 
 
     }
@@ -382,6 +402,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 showResult.visibility = View.GONE
                 showMap.visibility = View.GONE
                 fab.visibility = View.VISIBLE
+                voiceSearch.visibility = View.VISIBLE
+                searchText.visibility = View.GONE
                 bottomNavigationView.menu.setGroupCheckable(0, false, true)
 
             }
@@ -397,6 +419,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 showResult.visibility = View.GONE
                 showMap.visibility = View.GONE
                 fab.visibility = View.VISIBLE
+                voiceSearch.visibility = View.VISIBLE
+                searchText.visibility = View.GONE
                 bottomNavigationView.menu.setGroupCheckable(0, false, true)
             }
 
@@ -411,9 +435,10 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             }
 
             R.id.searchText -> {
-                val searchQuery = editTextQuery.text.toString()
+                searchQuery = editTextQuery.text.toString()
                 if (searchQuery.isNotBlank()) {
-
+                    showAudiMessage = false
+                    resetSortingButtons()
                     editTextQuery.clearFocus()
                     editTextQuery.text.clear()
                     voiceSearch.visibility = View.VISIBLE
@@ -465,24 +490,37 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 openNow.strokeColor = uncheckedStateColor()
                 openNow.setTextColor(uncheckedStateColor())
 
-                if (selectedCategory != "Jan Seva Kendra")
-                    viewModel.getFilterByDistance(
-                        currentLocation,
-                        selectedCategory,
-                        this,
-                        map,
-                        deviceLanguage,
-                        "distance"
-                    )
-                else
+                if (this::searchQuery.isInitialized) {
                     viewModel.getFilterByDistanceKeyword(
                         currentLocation,
-                        "Jan Seva Kendra",
+                        searchQuery,
                         this,
                         map,
                         deviceLanguage,
                         "distance"
                     )
+                } else {
+                    if (selectedCategory != "Jan Seva Kendra")
+                        viewModel.getFilterByDistance(
+                            currentLocation,
+                            selectedCategory,
+                            this,
+                            map,
+                            deviceLanguage,
+                            "distance"
+                        )
+                    else
+                        viewModel.getFilterByDistanceKeyword(
+                            currentLocation,
+                            "Jan Seva Kendra",
+                            this,
+                            map,
+                            deviceLanguage,
+                            "distance"
+                        )
+                }
+
+
             }
 
             R.id.relevance -> {
@@ -495,17 +533,30 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 relevance.strokeColor = checkedStateColor()
                 openNow.strokeColor = uncheckedStateColor()
                 openNow.setTextColor(uncheckedStateColor())
-                if (selectedCategory != "Jan Seva Kendra")
-                    viewModel.getData(currentLocation, selectedCategory, this, map, deviceLanguage)
-                else
-                    viewModel.getVoiceData(
-                        currentLocation,
-                        "Jan Seva Kendra",
-                        this,
-                        map,
-                        deviceLanguage
-                    )
 
+                if (this::searchQuery.isInitialized) {
+                    viewModel.getVoiceData(
+                        currentLocation, searchQuery, this, map, deviceLanguage
+                    )
+                } else {
+                    if (selectedCategory != "Jan Seva Kendra")
+                        viewModel.getData(
+                            currentLocation,
+                            selectedCategory,
+                            this,
+                            map,
+                            deviceLanguage
+                        )
+                    else
+                        viewModel.getVoiceData(
+                            currentLocation,
+                            "Jan Seva Kendra",
+                            this,
+                            map,
+                            deviceLanguage
+                        )
+
+                }
 
             }
 
@@ -520,15 +571,20 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 openNow.strokeColor = checkedStateColor()
                 openNow.setTextColor(checkedStateColor())
 
-                if (selectedCategory != "Jan Seva Kendra")
-                    viewModel.getFilterByOpenNow(
-                        currentLocation,
-                        selectedCategory,
-                        this,
-                        map,
-                        deviceLanguage
+                if (this::searchQuery.isInitialized) {
+                    viewModel.getFilterByOpenNowKeyword(
+                        currentLocation, this, map, deviceLanguage, searchQuery
                     )
-                else if (selectedCategory == "Jan Seva Kendra")
+                } else {
+                    if (selectedCategory != "Jan Seva Kendra")
+                        viewModel.getFilterByOpenNow(
+                            currentLocation,
+                            selectedCategory,
+                            this,
+                            map,
+                            deviceLanguage
+                        )
+                    else (selectedCategory == "Jan Seva Kendra")
                     viewModel.getFilterByOpenNowKeyword(
                         currentLocation,
                         this,
@@ -536,14 +592,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                         deviceLanguage,
                         "Jan Seva Kendra"
                     )
-                else
-                    viewModel.getVoiceData(
-                        currentLocation,
-                        "Jan Seva Kendra",
-                        this,
-                        map,
-                        deviceLanguage
-                    )
+                }
+
             }
 
             R.id.showResult -> {
@@ -674,7 +724,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         )
         intent.putExtra(
             RecognizerIntent.EXTRA_PROMPT,
-            "Speech recognition demo"
+            ""
         )
         startActivityForResult(intent, 1234)
     }
@@ -705,12 +755,13 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 fab.visibility = View.GONE
                 map.clear()
                 val searchText = matches[0]
-
+                showAudiMessage = true
                 searchBar.visibility = View.GONE
                 searchResultbar.visibility = View.VISIBLE
                 fab.visibility = View.GONE
                 selectedMarker = null
                 resetSortingButtons()
+                searchQuery = searchText
                 viewModel.getVoiceData(currentLocation, searchText, this, map, deviceLanguage)
 
             }
@@ -725,6 +776,12 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         resultList.visibility = View.GONE
         showResult.visibility = View.VISIBLE
         showMap.visibility = View.GONE
+    }
+
+    fun hideResultList() {
+        showResult.visibility = View.GONE
+        showMap.visibility = View.GONE
+        resultList.visibility = View.GONE
     }
 
 
@@ -786,6 +843,36 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         relevance.strokeColor = checkedStateColor()
         openNow.strokeColor = uncheckedStateColor()
         openNow.setTextColor(uncheckedStateColor())
+    }
+
+    override fun onInit(status: Int) {
+        if (status == TextToSpeech.SUCCESS) {
+            val result = tts!!.setLanguage(Locale.ENGLISH)
+
+            if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                println("The Language specified is not supported!")
+            } else {
+                println("The Language specified is supported!")
+            }
+        } else {
+            Log.e("TTS", "Initialization Failed!")
+        }
+    }
+
+
+    //speaks the location with its distance and estimated time to reach there
+    fun speakOut(message: String) {
+
+        tts!!.speak(message, TextToSpeech.QUEUE_FLUSH, null, "")
+    }
+
+
+    override fun onDestroy() {
+        if (tts != null) {
+            tts!!.stop()
+            tts!!.shutdown()
+        }
+        super.onDestroy()
     }
 
 

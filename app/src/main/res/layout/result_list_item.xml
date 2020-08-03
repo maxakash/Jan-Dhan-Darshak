@@ -38,6 +38,15 @@
     </LinearLayout>
 
     <ImageButton
+        android:id="@+id/result_audio"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="#fff"
+        android:layout_gravity="center_vertical"
+        android:layout_marginEnd="10dp"
+        android:src="@drawable/result_voice"/>
+
+    <ImageButton
         android:id="@+id/result_detail"
         android:layout_width="40dp"
         android:layout_height="40dp"

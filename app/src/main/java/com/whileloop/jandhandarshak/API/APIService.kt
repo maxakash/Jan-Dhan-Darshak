@@ -1,6 +1,7 @@
 package com.whileloop.jandhandarshak.API
 
 
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -23,4 +24,10 @@ interface APIService {
 
     @GET("nearbysearch/json?")
     fun filterByDistanceKeyword( @Query("keyword") query: String,@Query("rankby") rankyby: String,@Query("location") latlng: String, @Query("language") language: String, @Query("key") api: String): Call<String>
+
+    @GET("json?")
+    fun getDistance( @Query("origins") origin: String,@Query("destinations") destinations: String, @Query("key") api: String): Call<String>
+
+    @GET("tts?type=indiantts")
+    fun getEnglishVoice( @Query("text") message: String,@Query("api_key") apiKey: String,@Query("user_id") uderid: Int, @Query("action") action: String, @Query("numeric") numeric: String, @Query("lang") language: String): Call<ResponseBody>
 }
