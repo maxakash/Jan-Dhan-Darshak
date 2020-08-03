@@ -68,6 +68,7 @@
   <string name="userMobile">Mobile Number</string>
   <string name="userSuggestion">Suggestion</string>
   <string name="sendFeedback">Send Feedback</string>
+  <string name="markedFavoourite">Added to favourite locations</string>
   <string name="optionNotAvailable">This option is currently unavailable</string>
   <string name="nophoneavailable">Phone number not available</string>
   <string name="about">The Jan Dhan Darshak Mobile application provides an interface for citizen to view the banking infrastructure in India consisting of Bank Branches, ATMs, Bank Mitra locations. The data is collated by Department of Financial services from schedule commercial Banks both public and private sector.</string>

@@ -1,15 +1,19 @@
 package com.whileloop.jandhandarshak.viewmodels
 
+import android.content.Context
 import android.widget.ImageView
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.android.gms.common.api.ApiException
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.api.net.*
+import com.whileloop.jandhandarshak.R
+import com.whileloop.jandhandarshak.utils.infoToast
 
 class PlaceDetailViewModel : ViewModel() {
 
     val placeDetail by lazy { MutableLiveData<Place>() }
+    private val preferences = com.whileloop.jandhandarshak.utils.SharedPreferences()
 
     //this gets places details form google maps places api
     fun getPlaceDetails(placeId: String, placesClient: PlacesClient, placeImage: ImageView) {
@@ -73,5 +77,21 @@ class PlaceDetailViewModel : ViewModel() {
                     }
                 }
         }
+    }
+
+    fun markFavourite(
+        name: String,
+        location: String,
+        placeId: String,
+        address: String,
+        context: Context
+    ) {
+        val string = "$name,$location,$placeId,$address"
+        val locations = preferences.getArrayPrefs("locations", context)
+        locations.add(string)
+        preferences.setArrayPrefs("locations", locations, context)
+
+        context.infoToast(context.getString(R.string.markedFavoourite))
+
     }
 }

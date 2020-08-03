@@ -323,14 +323,10 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, TextToSpeech.OnIni
 
             )
             onDrawerItemClickListener = { v, drawerItem, position ->
-
-                drawerItem.isSelected = false
-
-
-
+                selectedMarker = null
                 when (position) {
                     1 -> {
-
+                        viewModel.markFavourites(map, this@MainActivity)
                     }
                     2 -> {
                         val dialog = MaterialAlertDialogBuilder(this@MainActivity)
@@ -471,6 +467,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, TextToSpeech.OnIni
             bottomNavigationView.visibility = View.GONE
             markerLocation = m.position
             markerDetails.visibility = View.VISIBLE
+            fab.visibility = View.GONE
             markerName.text = m.title
             markerAdd.text = m.snippet
 
@@ -989,7 +986,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, TextToSpeech.OnIni
 
     override fun onBackPressed() {
 
-        if(resultList.isVisible || searchResultbar.isVisible || showResult.isVisible || showMap.isVisible ){
+        if (resultList.isVisible || searchResultbar.isVisible || showResult.isVisible || showMap.isVisible) {
             resultList.visibility = View.GONE
             fab.visibility = View.VISIBLE
             searchResultbar.visibility = View.GONE
@@ -997,7 +994,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, TextToSpeech.OnIni
             showMap.visibility = View.GONE
             showResult.visibility = View.GONE
 
-        }else{
+        } else {
             super.onBackPressed()
         }
 

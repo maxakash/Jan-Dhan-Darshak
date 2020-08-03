@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.whileloop.jandhandarshak.API.APIService
@@ -30,6 +31,7 @@ class MainActivityViewModel : ViewModel() {
 
     val loading by lazy { MutableLiveData<Boolean>() }
     val audioMessage by lazy { MutableLiveData<String>() }
+    private val preferences = com.whileloop.jandhandarshak.utils.SharedPreferences()
     val placesList by lazy { MutableLiveData<ArrayList<HashMap<String?, String?>?>>() }
 
     //this gets nearby locations on the basis of relevance
@@ -433,38 +435,89 @@ class MainActivityViewModel : ViewModel() {
 
 
 
-    if (nearbyPlacesList.isNotEmpty())
-    {
-        try {
+        if (nearbyPlacesList.isNotEmpty()) {
+            try {
 
-            println(nearbyPlacesList[0]?.get("lng"))
-            val latLng = LatLng(
-                java.lang.Double.valueOf(nearbyPlacesList[0]?.get("lat")!!),
-                java.lang.Double.valueOf(nearbyPlacesList[0]?.get("lng")!!)
-            )
-            val placeName = nearbyPlacesList[0]?.get("place_name").toString()
-            getDistance(currentLocation, latLng, placeName)
-            map.moveCamera(CameraUpdateFactory.newLatLng(latLng))
-            map.animateCamera(CameraUpdateFactory.zoomTo(11f))
-            loading.value = false
+                println(nearbyPlacesList[0]?.get("lng"))
+                val latLng = LatLng(
+                    java.lang.Double.valueOf(nearbyPlacesList[0]?.get("lat")!!),
+                    java.lang.Double.valueOf(nearbyPlacesList[0]?.get("lng")!!)
+                )
+                val placeName = nearbyPlacesList[0]?.get("place_name").toString()
+                getDistance(currentLocation, latLng, placeName)
+                map.moveCamera(CameraUpdateFactory.newLatLng(latLng))
+                map.animateCamera(CameraUpdateFactory.zoomTo(11f))
+                loading.value = false
 
+                if (context is MainActivity)
+                    context.speakOut("")
+
+            } catch (e: Exception) {
+                loading.value = false
+                context.infoToast("No results found.")
+                e.printStackTrace()
+            }
+        } else {
             if (context is MainActivity)
-                context.speakOut("")
-
-        } catch (e: Exception) {
+                context.hideResultList()
             loading.value = false
             context.infoToast("No results found.")
-            e.printStackTrace()
         }
-    }else
-    {
-        if (context is MainActivity)
-            context.hideResultList()
-        loading.value = false
-        context.infoToast("No results found.")
     }
-}
 
+
+    fun markFavourites(map: GoogleMap, context: Context) {
+
+        map.clear()
+        val list = preferences.getArrayPrefs("locations", context)
+
+        var latitude:Double? = null
+        var longitude:Double? = null
+
+
+        try {
+
+            for (item in list) {
+                val latlng = item?.split(",")
+                println(latlng)
+
+                val markerOptions = MarkerOptions()
+                val lat = latlng?.get(1)!!.toDouble()
+                latitude = lat
+                val lng = latlng[2].toDouble()
+                longitude = lng
+                val placeName = latlng[0]
+                val latLng = LatLng(lat, lng)
+                val placeId = latlng[3]
+                markerOptions.position(latLng)
+                markerOptions.title(placeName)
+                markerOptions.snippet(latlng[4])
+
+                val height = 100
+                val width = 100
+                val bitmap =
+                    BitmapFactory.decodeResource(context.resources, R.drawable.marker2)
+                val smallMarker = Bitmap.createScaledBitmap(bitmap, width, height, false)
+                markerOptions.icon(BitmapDescriptorFactory.fromBitmap(smallMarker))
+                val marker = map.addMarker(markerOptions)
+                marker.tag = "Unknown $placeId"
+            }
+
+            if(latitude!=null && longitude!=null){
+                val location = LatLng(latitude, longitude)
+                println("going to $location")
+                val cameraPosition = CameraPosition.Builder()
+                    .target(location)
+                    .zoom(11f)
+                    .build()
+                map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
+
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+
+        }
+    }
 
 
 }

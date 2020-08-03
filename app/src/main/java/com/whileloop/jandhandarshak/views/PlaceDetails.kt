@@ -24,6 +24,8 @@ class PlaceDetails : AppCompatActivity() {
     private lateinit var viewModel: PlaceDetailViewModel
     private lateinit var placeDetails: Place
     private lateinit var placeId:String
+    private var name:String=""
+    private var address:String=""
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,10 +47,14 @@ class PlaceDetails : AppCompatActivity() {
 
             placeDetails = placeDetail
 
-            if (placeDetail.address != null)
+            if (placeDetail.address != null){
                 placeAddress.text = placeDetail.address
+                address = placeDetail.address.toString()
+            }
+
 
             if (placeDetail.name != null)
+                name = placeDetail.name.toString()
                 placeName.text = placeDetail.name
 
             if (placeDetail.name != null)
@@ -100,7 +106,7 @@ class PlaceDetails : AppCompatActivity() {
             }
 
             R.id.placeSave -> {
-                   placeSave.setImageResource(R.drawable.place_mark_fav)
+                viewModel.markFavourite(name,"${placeDetails.latLng?.latitude} ,${placeDetails.latLng?.longitude}",placeId,address,this)
             }
 
             R.id.placeShare -> {
