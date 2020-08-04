@@ -33,6 +33,7 @@ class MainActivityViewModel : ViewModel() {
     val audioMessage by lazy { MutableLiveData<String>() }
     private val preferences = com.whileloop.jandhandarshak.utils.SharedPreferences()
     val placesList by lazy { MutableLiveData<ArrayList<HashMap<String?, String?>?>>() }
+    val apiKey = "YOUR_API_KEY_HERE"
 
     //this gets nearby locations on the basis of relevance
     fun getData(
@@ -49,7 +50,7 @@ class MainActivityViewModel : ViewModel() {
             nearbyPlace = type,
             radius = 10000,
             language = language,
-            api = "AIzaSyCUYN_YgHg6FaPWzLgF4Pcr-pBfIwzGcaI"
+            api = apiKey
         )
         call.enqueue(object : Callback<String> {
 
@@ -84,7 +85,7 @@ class MainActivityViewModel : ViewModel() {
             nearbyPlace = query,
             radius = 9000,
             language = language,
-            api = "AIzaSyCUYN_YgHg6FaPWzLgF4Pcr-pBfIwzGcaI"
+            api = apiKey
         )
         call.enqueue(object : Callback<String> {
 
@@ -123,7 +124,7 @@ class MainActivityViewModel : ViewModel() {
             nearbyPlace = type,
             language = language,
             rankyby = rankBy,
-            api = "AIzaSyCUYN_YgHg6FaPWzLgF4Pcr-pBfIwzGcaI"
+            api = apiKey
         )
         call.enqueue(object : Callback<String> {
 
@@ -160,7 +161,7 @@ class MainActivityViewModel : ViewModel() {
             query = query,
             language = language,
             rankyby = rankBy,
-            api = "AIzaSyCUYN_YgHg6FaPWzLgF4Pcr-pBfIwzGcaI"
+            api = apiKey
         )
         call.enqueue(object : Callback<String> {
 
@@ -196,7 +197,7 @@ class MainActivityViewModel : ViewModel() {
             language = language,
             opennow = "true",
             radius = 10000,
-            api = "AIzaSyCUYN_YgHg6FaPWzLgF4Pcr-pBfIwzGcaI"
+            api = apiKey
         )
         call.enqueue(object : Callback<String> {
 
@@ -235,7 +236,7 @@ class MainActivityViewModel : ViewModel() {
             opennow = "true",
             radius = 10000,
             query = query,
-            api = "AIzaSyCUYN_YgHg6FaPWzLgF4Pcr-pBfIwzGcaI"
+            api = apiKey
         )
         call.enqueue(object : Callback<String> {
 
@@ -268,7 +269,7 @@ class MainActivityViewModel : ViewModel() {
         val call = request.getDistance(
             origin = "${origin.latitude},${origin.longitude}",
             destinations = "${destination.latitude},${destination.longitude}",
-            api = "AIzaSyCUYN_YgHg6FaPWzLgF4Pcr-pBfIwzGcaI"
+            api = apiKey
         )
         call.enqueue(object : Callback<String> {
 
