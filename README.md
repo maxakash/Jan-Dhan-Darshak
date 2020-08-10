@@ -1,5 +1,5 @@
 # Jan_Dhan_Darshak
-**The Government of India has developed a mobile app called Jan Dhan Darshak app, in order to provide guidance to the common people in locating a financial services such as bank, ATM, post office, CSC,bank mitra etc in the country.**  
+**The Government of India has developed a mobile app called Jan Dhan Darshak app, in order to provide guidance to the common people in locating a financial services such as bank, ATM, post office, CSC,bank mitra etc in the country.This app upgrades the existing app by improving UI/UX with adding more feature.**  
 ## App Screenshot
 <p float="left">
   <img src="https://i.imgur.com/bBMFDtc.jpg" width="150" alt="Jan Dhan Darshak filter" />
